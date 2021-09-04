@@ -2,10 +2,10 @@
 
 require 'json'
 require 'base64'
+require 'facter'
 require 'facter/util/ruby-xz-1.0.0/lib/xz'
 
 module Facter::Util::Bigbigpuppetfacts
-
     def use_compressmethod(compressmethod_chosen)
         @compressmethod = compressmethod_chosen
     end
@@ -29,35 +29,71 @@ module Facter::Util::Bigbigpuppetfacts
           end
         self
     end
+    class << self
+        def use_compressmethod(compressmethod_chosen)
+            @compressmethod = compressmethod_chosen
+        end
+        def value(user_query)
+            value_direct=Facter.value(user_query)
+            case value_direct
+            when /^bbpf_xz@'/
+                value_direct=XZ.compress(value_direct.gsub(/^bbpf_xz@/,'') )
+            when /^bbpf_xz_base64@/
+                value_direct=XZ.decompress( Base64.decode64(  value_direct.gsub(/^bbpf_xz_base64@/,'')  ))
+                value_direct=JSON.parse(value_direct)
+            else
+                case @compressmethod
+                when 'xz'
+                    value_direct=XZ.compress(value_direct )
+                when /'xz_base64/
+                    value_direct=XZ.decompress( Base64.decode64(  value_direct))
+                    value_direct=JSON.parse(value_direct)
+                else
+                    value_direct
+                end
+            end
+            value_direct
+        end
+    end
 end
 Facter::Util::Resolution.prepend  Facter::Util::Bigbigpuppetfacts
-
-# module Facter::Util::BigbigpuppetFacter
-#     def initialize
-#         super
-#         @compressmethod     = nil
-#     end
-#     def use_compressmethod(compressmethod_chosen)
-#         @compressmethod = compressmethod_chosen
-#     end
-
-
-#     def value_auto(user_query)
-#         value_direct=value(user_query)
-#         case value_direct
-#         when /^bbpf_xz@'/
-#             value_direct=XZ.compress(@code.gsub(/^bbpf_xz@'/,'') )
-#         when /^bbpf_xz_base64@/
-#             value_direct=XZ.decompress( Base64.decode64(  @code.gsub(/^bbpf_xz_base64@'/,'')  ))
-#         else
-#             case @compressmethod
-#             when 'xz'
-#                 value_direct=XZ.compress(@code )
-#             when /'xz_base64/
-#                 value_direct=XZ.decompress( Base64.decode64(  @code ))
-#             end
-#         end
-#         value_direct
-#     end
-# end
-# Facter.prepend  Facter::Util::BigbigpuppetFacter
+module Facter::Util::Bigbigpuppetfacter
+    class << self
+        def use_compressmethod(compressmethod_chosen)
+            @compressmethod = compressmethod_chosen
+        end
+        def value(user_query)
+            value_direct=super(user_query)
+            case value_direct
+            when /^bbpf_xz@'/
+                value_direct=XZ.compress(value_direct.gsub(/^bbpf_xz@/,'') )
+            when /^bbpf_xz_base64@/
+                value_direct=XZ.decompress( Base64.decode64(  value_direct.gsub(/^bbpf_xz_base64@/,'')  ))
+                value_direct=JSON.parse(value_direct)
+            else
+                case @compressmethod
+                when 'xz'
+                    value_direct=XZ.compress(value_direct )
+                when /'xz_base64/
+                    value_direct=XZ.decompress( Base64.decode64(  value_direct))
+                    value_direct=JSON.parse(value_direct)
+                else
+                    value_direct
+                end
+            end
+            value_direct
+        end
+    end
+end
+Facter.prepend Facter::Util::Bigbigpuppetfacter
+Facter::Util::Resolution.prepend  Facter::Util::Bigbigpuppetfacts
+module Facter
+    class << self
+        def use_compressmethod(compressmethod_chosen)
+            Facter::Util::Bigbigpuppetfacts.use_compressmethod(compressmethod_chosen)
+        end
+        def value_auto(user_query)
+            Facter::Util::Bigbigpuppetfacts.value(user_query)
+        end
+    end
+end
