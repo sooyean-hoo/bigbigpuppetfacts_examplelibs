@@ -20,12 +20,15 @@ help::
 	fi;
 	echo We are at `pwd`
 
-clean:
-	rm -fr ./lib/vendor
 
-all:
-	bundle install --path lib/vendor/bundle ;
-	bundle config set path ' lib/vendor/bundle' && bundle install
+vendordir:=./lib/vendor
+
+clean:
+	rm -fr ${vendordir}
+
+all: clean
+	bundle install --path ${vendordir}/bundle ;
+	bundle config set path ' ${vendordir}/bundle' && bundle install
 
 transferaufvalentepuppet: clean
 	rsync -avvpLhrztP *  .*   --exclude 'xzdemorun'  /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts/
