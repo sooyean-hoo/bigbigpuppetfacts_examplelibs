@@ -36,7 +36,7 @@ module Facter::Util::Bigbigpuppetfacts
         def value(user_query)
             value_direct=Facter.value(user_query)
             case value_direct
-            when /^bbpf_xz@'/
+            when /^bbpf_xz@/
                 value_direct=XZ.compress(value_direct.gsub(/^bbpf_xz@/,'') )
             when /^bbpf_xz_base64@/
                 value_direct=XZ.decompress( Base64.decode64(  value_direct.gsub(/^bbpf_xz_base64@/,'')  ))
@@ -45,7 +45,7 @@ module Facter::Util::Bigbigpuppetfacts
                 case @compressmethod
                 when 'xz'
                     value_direct=XZ.compress(value_direct )
-                when /'xz_base64/
+                when 'xz_base64'
                     value_direct=XZ.decompress( Base64.decode64(  value_direct))
                     value_direct=JSON.parse(value_direct)
                 else
@@ -65,7 +65,7 @@ module Facter::Util::Bigbigpuppetfacter
         def value(user_query)
             value_direct=super(user_query)
             case value_direct
-            when /^bbpf_xz@'/
+            when /^bbpf_xz@/
                 value_direct=XZ.compress(value_direct.gsub(/^bbpf_xz@/,'') )
             when /^bbpf_xz_base64@/
                 value_direct=XZ.decompress( Base64.decode64(  value_direct.gsub(/^bbpf_xz_base64@/,'')  ))
@@ -74,7 +74,7 @@ module Facter::Util::Bigbigpuppetfacter
                 case @compressmethod
                 when 'xz'
                     value_direct=XZ.compress(value_direct )
-                when /'xz_base64/
+                when 'xz_base64'
                     value_direct=XZ.decompress( Base64.decode64(  value_direct))
                     value_direct=JSON.parse(value_direct)
                 else
