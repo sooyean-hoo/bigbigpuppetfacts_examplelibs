@@ -6,7 +6,7 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 # gem "rails"
 gem 'ruby-xz', '~> 1.0'
-gem 'base64'
+#gem 'base64'
 
 #gem 'benchmark', '~> 0.1.1'
 
