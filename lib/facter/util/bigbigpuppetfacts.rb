@@ -92,7 +92,7 @@ module Facter
         def use_compressmethod(compressmethod_chosen)
             Facter::Util::Bigbigpuppetfacts.use_compressmethod(compressmethod_chosen)
         end
-        def value_auto(user_query)
+        def value_a(user_query)
             Facter::Util::Bigbigpuppetfacts.value(user_query)
         end
     end
