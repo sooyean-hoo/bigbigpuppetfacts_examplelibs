@@ -1,15 +1,17 @@
 # Rakefile
 task default: [:clean, :build]
 
+vendordir='./lib/vendor'
+
 task :clean do
     puts "Cleaning Dependency"
-    `rm -fr ./vendor`
+    `rm -fr #{vendordir}`
 end
 
 task :build do
     puts "Getting the Dependencies, Based on Gemfile"
-    `bundle install --path vendor/bundle`
-	`bundle config set path 'vendor/bundle' && bundle install`
+    `bundle install --path #{vendordir}/bundle`
+	`bundle config set path '#{vendordir}/bundle' && bundle install`
     puts 'You can run the utilty using xzpuppetutils.sh now.'
 end
 
@@ -18,7 +20,6 @@ task :transferaufvalentepuppet do
     `rsync -avvpLhrztP *  .*   --exclude 'xzdemorun'  /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts #&& rm -fr /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts/zxdemorun`
     puts 'Getting files to the Deploy Directory For Github Checkins.'
 end
-
 task buildfacterutils: [:clean, :build] do
 	command=<<-'cmd'
 orgDir=$PWD; \
