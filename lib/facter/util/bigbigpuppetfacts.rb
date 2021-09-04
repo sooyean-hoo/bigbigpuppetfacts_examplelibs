@@ -2,7 +2,7 @@
 
 require 'json'
 require 'base64'
-require 'vendor/bundle/ruby/2.7.0/gems/ruby-xz-1.0.0/lib/xz'
+require 'facter/util/ruby-xz-1.0.0/lib/xz'
 
 module Facter::Util::Bigbigpuppetfacts
 

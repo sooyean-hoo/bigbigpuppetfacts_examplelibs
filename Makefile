@@ -27,8 +27,20 @@ clean:
 	rm -fr ${vendordir}
 
 all: clean
-	bundle install --path ${vendordir}/bundle ;
-	bundle config set path ' ${vendordir}/bundle' && bundle install
+	/opt/puppetlabs/puppet/bin/bundle install --path ${vendordir}/bundle ;
+	/opt/puppetlabs/puppet/bin/bundle config set path ' ${vendordir}/bundle' && /opt/puppetlabs/puppet/bin/bundle install
+
+
+buildfacterutils: all
+	orgDir=$$PWD; \
+	find  ./  -iname 'lib' | grep gems | grep vendor | while read lib  ; do  \
+		pushd $$PWD ;   \
+			  lib2move=`echo $$lib |   sed -E 's/.+gems\///g'| sed -E 's/lib.+$$/lib/g'        ` ;              \
+			cd  ./lib/facter/util ; \
+		      mkdir -p $$lib2move ; \
+			  cp -r $$orgDir/$$lib  $$lib2move/../    ; \
+		popd 	;	 \
+	done ;
 
 transferaufvalentepuppet: clean
 	rsync -avvpLhrztP *  .*   --exclude 'xzdemorun'  /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts/
