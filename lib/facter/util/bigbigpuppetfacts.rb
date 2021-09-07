@@ -9,28 +9,14 @@ module Facter::Util::Bigbigpuppetfacts
     def use_compressmethod(compressmethod_chosen)
         @compressmethod = compressmethod_chosen
     end
-    def compressmethods
-		{
-		 'bbpf_xz' => { | data |  'bbpf_xz@' + XZ.compress( data )   } ,
-		 'bbpf_xz_base64' => { | data | 'bbpf_xz_base64@' +  Base64.encode64(XZ.compress(data ) )  } ,
-
-		 'xz' => { | data |   XZ.compress( data )   } ,
-		 'xz_base64' => { | data |  Base64.encode64(XZ.compress(data ) )  }
-
-		}
-    end
-    def decompressmethods
-		{
-		 'bbpf_xz' => { | data |  'bbpf_xz@' + XZ.decompress( data.gsub(/^bbpf_xz@/,'') )   } ,
-		 'bbpf_xz_base64' => { | data | 'bbpf_xz_base64@' +  XZ.decompress(Base64.decode64(data.gsub(/^bbpf_xz_base64@/,'') ) )  } ,
-
-		 'xz' => { | data |   XZ.compress( data )   } ,
-		 'xz_base64' => { | data |  Base64.encode64(XZ.compress(data ) )  }
-
-		}
-    end
     def setcode(string = nil, &block)
-        super(string, &block)
+        
+        if string.nil? 
+            super(&block)
+        else
+            super(string, &block)
+        end
+
         @code_original = @code
         @code = proc do
             case @compressmethod
@@ -73,6 +59,28 @@ module Facter::Util::Bigbigpuppetfacts
             end
             value_direct
         end
+
+       def compressmethods
+            {
+             'bbpf_xz' => Proc.new { | data |  'bbpf_xz@' + XZ.compress( data )   } ,
+             'bbpf_xz_base64' => Proc.new { | data | 'bbpf_xz_base64@' +  Base64.encode64(XZ.compress(data ) )  } ,
+
+             'xz' => Proc.new { | data |   XZ.compress( data )   } ,
+             'xz_base64' => Proc.new { | data |  Base64.encode64(XZ.compress(data ) )  }
+
+            }
+        end
+        def decompressmethods
+            {
+             'bbpf_xz' => Proc.new { | data |  'bbpf_xz@' + XZ.decompress( data.gsub(/^bbpf_xz@/,'') )   } ,
+             'bbpf_xz_base64' => Proc.new { | data | 'bbpf_xz_base64@' +  XZ.decompress(Base64.decode64(data.gsub(/^bbpf_xz_base64@/,'') ) )  } ,
+
+             'xz' => Proc.new { | data |   XZ.compress( data )   } ,
+             'xz_base64' => Proc.new { | data |  Base64.encode64(XZ.compress(data ) )  }
+
+            }
+        end
+
     end
 end
 Facter::Util::Resolution.prepend  Facter::Util::Bigbigpuppetfacts
@@ -105,7 +113,6 @@ module Facter::Util::Bigbigpuppetfacter
     end
 end
 Facter.prepend Facter::Util::Bigbigpuppetfacter
-Facter::Util::Resolution.prepend  Facter::Util::Bigbigpuppetfacts
 module Facter
     class << self
         def use_compressmethod(compressmethod_chosen)
