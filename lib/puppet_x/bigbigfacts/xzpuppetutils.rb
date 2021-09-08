@@ -1,7 +1,7 @@
 #!/opt/puppetlabs/puppet/bin/ruby
 
 
-require_relative '../../facter/util/bigbigpuppetfacts.rb'
+
 #require 'pry-byebug'
 
 
@@ -34,15 +34,15 @@ if ARGV.count == 0
 
   helphelp
 
-  { 'compress' => Facter::Util::Bigbigpuppetfacts.compressmethods.keys , 
-    'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each{ | prefix, processorKeyNames |
-		processorKeyNames.each { | commandpostfix |
-			puts <<-helphelp 
-  #{ cr } #{prefix}_#{commandpostfix} =  #{prefix} the file using #{commandpostfix} combo-algo from "Facter::Util::Bigbigpuppetfacts"
-			helphelp
-		}
-		puts ''
-	}
+#   { 'compress' => Facter::Util::Bigbigpuppetfacts.compressmethods.keys , 
+#     'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each{ | prefix, processorKeyNames |
+# 		processorKeyNames.each { | commandpostfix |
+# 			puts <<-helphelp 
+#   #{ cr } #{prefix}_#{commandpostfix} =  #{prefix} the file using #{commandpostfix} combo-algo from "Facter::Util::Bigbigpuppetfacts"
+# 			helphelp
+# 		}
+# 		puts ''
+# 	}
 
 puts <<-helphelp 
 
@@ -134,6 +134,7 @@ else
 		require 'bzip2'
 		data = Bzip2.uncompress(data)
 	else
+		require_relative '../../facter/util/bigbigpuppetfacts.rb'
 		#＃# Using Procs from Facter::Util::Bigbigpuppetfacts
 		{ 'compress_' => Facter::Util::Bigbigpuppetfacts.compressmethods, 
 		  'decompress_' => Facter::Util::Bigbigpuppetfacts.decompressmethods }.each{ | prefix, processorhash |
