@@ -39,12 +39,23 @@ module Facter::Util::Bigbigpuppetfacts
             @compressmethod = compressmethod_chosen
         end
         def value(user_query)
+            
             value_direct=Facter.value(user_query)
+
+            if user_query =~ /-dump./
+                clear_value_direct = value_direct
+                value_direct = user_query.gsub(/./,'_')    ### System will use the key to know the compression
+            end
+
             case value_direct
             when /^bbpf_xz@/
                 value_direct=XZ.compress(value_direct.gsub(/^bbpf_xz@/,'') )
             when /^bbpf_xz_base64@/
                 value_direct=XZ.decompress( Base64.decode64(  value_direct.gsub(/^bbpf_xz_base64@/,'')  ))
+                value_direct=JSON.parse(value_direct)
+            when /xz_base64/
+                value_direct = clear_value_direct
+                value_direct=XZ.decompress( Base64.decode64(  value_direct ))
                 value_direct=JSON.parse(value_direct)
             else
                 case @compressmethod
@@ -84,35 +95,35 @@ module Facter::Util::Bigbigpuppetfacts
     end
 end
 Facter::Util::Resolution.prepend  Facter::Util::Bigbigpuppetfacts
-module Facter::Util::Bigbigpuppetfacter
-    class << self
-        def use_compressmethod(compressmethod_chosen)
-            @compressmethod = compressmethod_chosen
-        end
-        def value(user_query)
-            value_direct=super(user_query)
-            case value_direct
-            when /^bbpf_xz@/
-                value_direct=XZ.compress(value_direct.gsub(/^bbpf_xz@/,'') )
-            when /^bbpf_xz_base64@/
-                value_direct=XZ.decompress( Base64.decode64(  value_direct.gsub(/^bbpf_xz_base64@/,'')  ))
-                value_direct=JSON.parse(value_direct)
-            else
-                case @compressmethod
-                when 'xz'
-                    value_direct=XZ.compress(value_direct )
-                when 'xz_base64'
-                    value_direct=XZ.decompress( Base64.decode64(  value_direct))
-                    value_direct=JSON.parse(value_direct)
-                else
-                    value_direct
-                end
-            end
-            value_direct
-        end
-    end
-end
-Facter.prepend Facter::Util::Bigbigpuppetfacter
+# module Facter::Util::Bigbigpuppetfacter
+#     class << self
+#         def use_compressmethod(compressmethod_chosen)
+#             @compressmethod = compressmethod_chosen
+#         end
+#         def value(user_query)
+#             value_direct=super(user_query)
+#             case value_direct
+#             when /^bbpf_xz@/
+#                 value_direct=XZ.compress(value_direct.gsub(/^bbpf_xz@/,'') )
+#             when /^bbpf_xz_base64@/
+#                 value_direct=XZ.decompress( Base64.decode64(  value_direct.gsub(/^bbpf_xz_base64@/,'')  ))
+#                 value_direct=JSON.parse(value_direct)
+#             else
+#                 case @compressmethod
+#                 when 'xz'
+#                     value_direct=XZ.compress(value_direct )
+#                 when 'xz_base64'
+#                     value_direct=XZ.decompress( Base64.decode64(  value_direct))
+#                     value_direct=JSON.parse(value_direct)
+#                 else
+#                     value_direct
+#                 end
+#             end
+#             value_direct
+#         end
+#     end
+# end
+# Facter.prepend Facter::Util::Bigbigpuppetfacter
 module Facter
     class << self
         def use_compressmethod(compressmethod_chosen)
