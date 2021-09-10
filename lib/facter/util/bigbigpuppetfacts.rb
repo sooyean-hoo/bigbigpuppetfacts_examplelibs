@@ -3,7 +3,7 @@
 require 'json'
 require 'base64'
 require 'facter'
-require 'facter/util/ruby-xz-1.0.0/lib/xz'
+require_relative '../../facter/util/ruby-xz-1.0.0/lib/xz'
 
 module Facter::Util::Bigbigpuppetfacts
     def use_compressmethod(compressmethod_chosen)
