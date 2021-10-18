@@ -1,2 +1,2 @@
 ---
-BUNDLE_PATH: "./lib/vendor/bundle"
+BUNDLE_JOBS: "4"
