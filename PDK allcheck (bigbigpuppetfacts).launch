@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.ui.externaltools.ProgramLaunchConfigurationType">
+    <stringAttribute key="bad_container_name" value="PDKValidate"/>
+    <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="false"/>
+    <mapAttribute key="org.eclipse.debug.core.environmentVariables">
+        <mapEntry key="HOME" value="/Users/valente"/>
+        <mapEntry key="LOGNAME" value="valente"/>
+        <mapEntry key="PATH" value="/usr/local/sbin:/Users/valente/bin/:/usr/local/bin/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/Users/valente/bin:/Users/valente/sbin:/Users/valente/UnixBin:/usr/local/munki:/opt/puppetlabs/pdk/bin:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/valente/.gem/ruby/2.6.0/bin"/>
+        <mapEntry key="SHELL" value="/bin/zsh"/>
+        <mapEntry key="TMPDIR" value="/var/folders/tx/dwd87c0d62vb0m5tpgh7rmwc0000gt/T/"/>
+    </mapAttribute>
+    <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+        <listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
+    </listAttribute>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="/usr/bin/make"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-C &quot;${project_loc}&quot; -f '/Users/valente/mym/valentepuppet/Makefile'  fullchecks validateOPTS=' -a --parallel --puppet-version=6.22.0 '"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/bigbigpuppetfacts}"/>
+</launchConfiguration>
