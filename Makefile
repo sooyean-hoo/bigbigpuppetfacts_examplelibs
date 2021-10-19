@@ -44,6 +44,7 @@ buildfacterutils: all
 			  lib2move=`echo $$lib |   sed -E 's/.+gems\///g'| sed -E 's/lib.+$$/lib/g'        ` ;              \
 			cd  ./lib/facter/util ; \
 		      mkdir -p $$lib2move ; \
+		      echo "==============================cp -r $$orgDir/$$lib  $$lib2move/../   "; \
 			  cp -r $$orgDir/$$lib  $$lib2move/../    ; \
 		popd 	;	 \
 	done ;
