@@ -31,11 +31,11 @@ elif [[   $1 = 'test'     ]] ; then
     path2sampleFile=${2:-/dev/zero}
     maxsizetoconsider=${3:-10240 }  # 10MB
     sizeincstep=${4:-2 }         # 2k
-    rptpath=${5:-/tmp/report.csv }   
+    rptpath=${5:-/tmp/report.csv }
 
     testfile=/tmp/perftest_testfile
-    testsrc=/tmp/perftest_unit.txt 
-    testsrcinc=/tmp/perftest_unitinc.txt 
+    testsrc=/tmp/perftest_unit.txt
+    testsrcinc=/tmp/perftest_unitinc.txt
     testdone=/tmp/perftest_compressfile.txt
 
     methodused=compress_xz_base64
@@ -50,10 +50,10 @@ elif [[   $1 = 'test'     ]] ; then
     touch $testsrcinc
     if [  `stat -c%s $testsrcinc`  -gt  0$sizeincstep   ] ; then
         > $testsrcinc
-    fi; 
+    fi;
     while [  `stat -c%s $testsrcinc`  -lt  0$sizeincstep   ] ; do
         dd if=$testfile    of=$testsrcinc   count=$sizeincstep  ibs=1k  oflag=sync
-    done 
+    done
     > $testsrc
     > $testdone
     echo  Prep Done...
@@ -61,7 +61,7 @@ elif [[   $1 = 'test'     ]] ; then
     echo 'originalsize(B),compressmethod,compressratio_in_percent,compressedsize(B),timetaken_in_sec'  >  $rptpath
     sizetouse=$sizeincstep
     while [ $sizetouse    -lt  0$maxsizetoconsider   ] ; do
- 
+
         cat $testsrcinc >> $testsrc
         startsize=`stat -c%s  $testsrc`
 
@@ -83,15 +83,15 @@ elif [[   $1 = 'test'     ]] ; then
         timetaken=$((now-start))
 
         echo "$startsize,$methodused,$pcI.$pcD,$endsize,$timetaken" >>  $rptpath
-        sizetouse=$((  $sizetouse +  $sizeincstep )) 
+        sizetouse=$((  $sizetouse +  $sizeincstep ))
     done
 
-    rm -f $testfile 
+    rm -f $testfile
     rm -f $testsrc
     rm -f $testsrcinc
     rm -f $testdone
 else
-    GEM_HOME=lib/vendor/bundle/ruby/2.6.0 RUBYLIB=lib/facter/util/ruby-xz-1.0.0/lib    lib/puppet_x/bigbigfacts/xzpuppetutils.rb  $@
+    GEM_HOME=`ls -1d lib/vendor/bundle/ruby/*` RUBYLIB=lib/facter/util/ruby-xz-1.0.0/lib    lib/puppet_x/bigbigfacts/xzpuppetutils.rb  $@
 fi;
 
 
