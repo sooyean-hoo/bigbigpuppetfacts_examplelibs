@@ -2,6 +2,7 @@ require 'json'
 require 'base64'
 require 'facter'
 require 'facter/util/ruby-xz-1.0.0/lib/xz'
+require 'facter/util/rbzip2-0.3.0/lib/rbzip2'
 
 ## Module for fact compression, compatible with Facter Cache
 module Facter::Util::Bigbigpuppetfacts
@@ -80,6 +81,13 @@ module Facter::Util::Bigbigpuppetfacts
        'xz' => proc { |data| XZ.compress(data) },
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
 
+        'bz' => proc { |data|
+          bz2  = RBzip2.default_adapter::Compressor.new( StringIO.new data)  # wrap the file into the compressor
+          bz2.write data                      # write the raw data to the compressor
+          bz2.close
+          data
+         },
+
         'base64' => proc { |data| Base64.encode64(data) },
         'json' => proc { |data|
                     begin
@@ -107,6 +115,13 @@ module Facter::Util::Bigbigpuppetfacts
 
        'xz' => proc { |data| XZ.decompress(data) },
        'xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data)) },
+
+       'bz' => proc { |data|
+         bz2  = RBzip2.default_adapter::Decompressor.new ( StringIO.new data)  # wrap the file into the decompressor
+         data = bz2.read
+         bz2.close
+         data
+       },
 
        'base64' => proc { |data| Base64.decode64(data) },
        'json' => proc { |data|
@@ -200,6 +215,9 @@ end
 
 module Facter::Util::Bigbigpuppetfacter
   class << self
+    def testdata
+      "SOOYEANISTESTINGCOMPRESSFACTWITH THIS STRING !!!!@@@@\#\$#%$@^%$#^%^$&^&%*&*(&^(&^)*&^)*&`\"\\"
+    end
     def use_compressmethod(compressmethod_chosen)
       @compressmethod = compressmethod_chosen
     end
