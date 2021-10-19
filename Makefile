@@ -26,9 +26,15 @@ vendordir:=./lib/vendor
 clean:
 	rm -fr ${vendordir}
 
-all: clean
+all: clean bundle
+	echo bundle it.
+
+makeid:=${shell echo "makemake$$$$" }
+bundle::
+	[ -e ./Gemfile.local ] && [ -e ./Gemfile ] && cp -f  ./Gemfile  ./Gemfile.${makeid} && cp -f ./Gemfile.local  ./Gemfile
 	/opt/puppetlabs/puppet/bin/bundle install --path ${vendordir}/bundle ;
 	/opt/puppetlabs/puppet/bin/bundle config set path ' ${vendordir}/bundle' && /opt/puppetlabs/puppet/bin/bundle install
+	[ -e ./Gemfile.${makeid} ]  && rm  -f  ./Gemfile  && mv  ./Gemfile.${makeid}  ./Gemfile
 
 
 buildfacterutils: all
