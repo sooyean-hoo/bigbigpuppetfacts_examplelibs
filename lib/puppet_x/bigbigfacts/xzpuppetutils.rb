@@ -57,6 +57,10 @@ if ARGV.count == 0
   #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT - XZ_DECOMP
 
 
+  This is will compress the ./Gemfile, base64 encode it, then base64 deencode it, decompress and print it.
+  #{cr} IN ./Gemfile OUT -  BZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT - BZ_DECOMP
+
+
 
   This is will compress the ./Gemfile save it as  ./Gemfile.xz .
   #{cr} IN ./Gemfile OUT ./Gemfile.xz  XZ_COMP
