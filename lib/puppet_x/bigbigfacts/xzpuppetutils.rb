@@ -122,14 +122,14 @@ else
     require 'xz'
     data = XZ.decompress(data)
 
-  elsif  ARGV.include?('RBZ_COMP')
+  elsif  ARGV.include?('BZ_COMP')
     require 'rbzip2'
     #data = RBzip2.compress(data)
     bz2  = RBzip2.default_adapter::Compressor.new( StringIO.new data)  # wrap the file into the compressor
     bz2.write data                      # write the raw data to the compressor
     bz2.close
     data
-  elsif  ARGV.include?('RBZ_DECOMP')
+  elsif  ARGV.include?('BZ_DECOMP')
     require 'rbzip2'
     #data = RBzip2.uncompress(data)
     bz2  = RBzip2.default_adapter::Decompressor.new ( StringIO.new data)  # wrap the file into the decompressor
