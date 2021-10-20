@@ -141,17 +141,29 @@ else
     bz2.close
     data
   else
+	comp_op=(/compress_.+/.match (ARGV.join ' ')).to_s.sub(/compress_/,'')
+	decomp_op=(/decompress_.+/.match (ARGV.join ' ')).to_s.sub(/decompress_/,'')
+	unless decomp_op.empty?
+		data = Facter::Util::Bigbigpuppetfacts.decompress(  data , decomp_op )
+	else
+		unless comp_op.empty?
+			data=Facter::Util::Bigbigpuppetfacts.compress(  data , comp_op )
+		else
+			raise 'Error No Method Provided'  
+		end
+	end
+
     # ＃# Using Procs from Facter::Util::Bigbigpuppetfacts
-    { 'compress_' => Facter::Util::Bigbigpuppetfacts.compressmethods,
-      'decompress_' => Facter::Util::Bigbigpuppetfacts.decompressmethods }.each do |prefix, processorhash|
-      processor = processorhash.select do |pname, _p|
-        ARGV.include?(prefix + pname)
-      end
-      unless processor.nil? || processor.empty?
-        processor = processor[ processor.keys[0] ]
-        data = processor.call(data) unless processor.nil?
-      end
-    end
+    # { 'compress_' => Facter::Util::Bigbigpuppetfacts.compressmethods,
+    #   'decompress_' => Facter::Util::Bigbigpuppetfacts.decompressmethods }.each do |prefix, processorhash|
+    #   processor = processorhash.select do |pname, _p|
+    #     ARGV.include?(prefix + pname)
+    #   end
+    #   unless processor.nil? || processor.empty?
+    #     processor = processor[ processor.keys[0] ]
+    #     data = processor.call(data) unless processor.nil?
+    #   end
+    # end
   end
 
   if outout_stdout
