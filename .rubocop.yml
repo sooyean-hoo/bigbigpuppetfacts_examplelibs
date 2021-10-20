@@ -19,7 +19,8 @@ AllCops:
   - "**/Vagrantfile"
   - "**/Guardfile"
   - "lib/vendor/**/*"
-  - "lib/facter/util/**/*"
+  - "lib/facter/util/rbzip2-0.3.0/**/*"
+  - "lib/facter/util/ruby-xz-1.0.0/**/*"
 Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200
