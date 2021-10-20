@@ -141,17 +141,17 @@ else
     bz2.close
     data
   else
-	comp_op=(/compress_.+/.match (ARGV.join ' ')).to_s.sub(/compress_/,'')
-	decomp_op=(/decompress_.+/.match (ARGV.join ' ')).to_s.sub(/decompress_/,'')
-	unless decomp_op.empty?
-		data = Facter::Util::Bigbigpuppetfacts.decompress(  data , decomp_op )
-	else
-		unless comp_op.empty?
-			data=Facter::Util::Bigbigpuppetfacts.compress(  data , comp_op )
-		else
-			raise 'Error No Method Provided'  
-		end
-	end
+    comp_op = %r{compress_.+}.match(ARGV.join(' ')).to_s.sub(%r{compress_}, '')
+    decomp_op = %r{decompress_.+}.match(ARGV.join(' ')).to_s.sub(%r{decompress_}, '')
+    if decomp_op.empty?
+      if comp_op.empty?
+        raise 'Error No Method Provided'
+      else
+        data = Facter::Util::Bigbigpuppetfacts.compress(data, comp_op)
+      end
+    else
+      data = Facter::Util::Bigbigpuppetfacts.decompress(data, decomp_op)
+    end
 
     # ＃# Using Procs from Facter::Util::Bigbigpuppetfacts
     # { 'compress_' => Facter::Util::Bigbigpuppetfacts.compressmethods,
