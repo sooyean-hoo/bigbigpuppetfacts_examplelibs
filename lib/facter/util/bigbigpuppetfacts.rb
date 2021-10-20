@@ -237,7 +237,7 @@ module Facter::Util::Bigbigpuppetfacter
 
     def compress(value, method = 'auto')
       @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
-      if !value.is_a?(String) && !/^[^]/.match?(method)
+      if !value.is_a?(String) && ! /^[\^]/.match?(method)
         method='^json_'+method
       end
       Facter::Util::Bigbigpuppetfacts.compress(value, method)
