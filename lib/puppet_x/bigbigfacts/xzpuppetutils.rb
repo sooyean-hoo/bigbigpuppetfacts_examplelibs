@@ -3,7 +3,7 @@
 require_relative '../../facter/util/bigbigpuppetfacts.rb'
 # require 'pry-byebug'
 
-cr = File.basename $0
+cr = File.basename $PROGRAM_NAME
 cr = cr.gsub(%r{.rb}, '.sh')
 cr = "./#{cr}"
 
@@ -32,8 +32,8 @@ if ARGV.count == 0
   helphelp
 
   { 'compress' => Facter::Util::Bigbigpuppetfacts.compressmethods.keys,
-    'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each do |prefix, processorKeyNames|
-      processorKeyNames.each do |commandpostfix|
+    'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each do |prefix, processor_key_names|
+      processor_key_names.each do |commandpostfix|
         puts <<-helphelp
   #{cr} #{prefix}_#{commandpostfix} =  #{prefix} the file using #{commandpostfix} combo-algo from "Facter::Util::Bigbigpuppetfacts"
       helphelp
@@ -108,7 +108,7 @@ else
     end
     # outfname=outfname[0] unless outfname.nil? || outfname.empty?
   end
-  outoutSTDOUT = ARGV.include?('STDOUT') || outfname == '-'
+  outout_stdout = ARGV.include?('STDOUT') || outfname == '-'
 
   # when  ARGV.include?('CAT')
   # 	puts(data)
@@ -128,15 +128,15 @@ else
 
   elsif  ARGV.include?('BZ_COMP')
     require 'rbzip2'
-    #data = RBzip2.compress(data)
-    bz2  = RBzip2.default_adapter::Compressor.new( StringIO.new data)  # wrap the file into the compressor
-    bz2.write data                      # write the raw data to the compressor
+    # data = RBzip2.compress(data)
+    bz2 = RBzip2.default_adapter::Compressor.new(StringIO.new(data)) # wrap the file into the compressor
+    bz2.write data # write the raw data to the compressor
     bz2.close
     data
   elsif  ARGV.include?('BZ_DECOMP')
     require 'rbzip2'
-    #data = RBzip2.uncompress(data)
-    bz2  = RBzip2.default_adapter::Decompressor.new ( StringIO.new data)  # wrap the file into the decompressor
+    # data = RBzip2.uncompress(data)
+    bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
     data = bz2.read
     bz2.close
     data
@@ -154,7 +154,7 @@ else
     end
   end
 
-  if outoutSTDOUT
+  if outout_stdout
     puts(data)
   else
     file = File.open(outfname, 'w')

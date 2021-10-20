@@ -1,3 +1,4 @@
+# Module Bigbigpuppetfacts
 require 'json'
 require 'base64'
 require 'facter'
@@ -81,28 +82,28 @@ module Facter::Util::Bigbigpuppetfacts
        'xz' => proc { |data| XZ.compress(data) },
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
 
-        'bz' => proc { |data|
-          bz2  = RBzip2.default_adapter::Compressor.new( StringIO.new data)  # wrap the file into the compressor
-          bz2.write data                      # write the raw data to the compressor
-          bz2.close
-          data
-         },
+       'bz' => proc { |data|
+         bz2 = RBzip2.default_adapter::Compressor.new(StringIO.new(data)) # wrap the file into the compressor
+         bz2.write data # write the raw data to the compressor
+         bz2.close
+         data
+       },
 
         'base64' => proc { |data| Base64.encode64(data) },
         '^json' => proc { |data|
-                    begin
-                      JSON.generate(data)
-                    rescue
-                      data
-                    end
-                  },
+                     begin
+                       JSON.generate(data)
+                     rescue
+                       data
+                     end
+                   },
         '^yaml' => proc { |data|
-                    begin
-                      YAML.dump(data)
-                    rescue
-                      data
-                    end
-                  },
+                     begin
+                       YAML.dump(data)
+                     rescue
+                       data
+                     end
+                   },
 
         'plain' => proc { |data| data }
       }
@@ -117,7 +118,7 @@ module Facter::Util::Bigbigpuppetfacts
        'xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data)) },
 
        'bz' => proc { |data|
-         bz2  = RBzip2.default_adapter::Decompressor.new ( StringIO.new data)  # wrap the file into the decompressor
+         bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
          data = bz2.read
          bz2.close
          data
@@ -125,19 +126,19 @@ module Facter::Util::Bigbigpuppetfacts
 
        'base64' => proc { |data| Base64.decode64(data) },
        '^json' => proc { |data|
-                   begin
-                     JSON.parse(data)
-                   rescue
-                     data
-                   end
-                 },
+                    begin
+                      JSON.parse(data)
+                    rescue
+                      data
+                    end
+                  },
        '^yaml' => proc { |data|
-                   begin
-                     YAML.safe_load(data)
-                   rescue
-                     data
-                   end
-                 },
+                    begin
+                      YAML.safe_load(data)
+                    rescue
+                      data
+                    end
+                  },
 
         'plain' => proc { |data| data }
       }
@@ -158,19 +159,22 @@ module Facter::Util::Bigbigpuppetfacts
         p.call(data__)
       end
     end
+
     def testdata
       "SOOYEANISTESTINGCOMPRESSFACTWITH THIS STRING=+_` <[{ 'aaaa':'a0/s'}]>|!/?@@@@\#\$#%$@^%$#^%^$&^&%*&*(&^(&^)*&^)*&`\"\\"
     end
-    def checkmethod( method,fallback_method='plain')
-      data = testdata
+
+    def checkmethod(method, fallback_method = 'plain')
+      testdata
       begin
-        testdataend = decompress( compress(testdata,method),method)
-        method = fallback_method if testdataend != testdataend
+        testdataend = decompress(compress(testdata, method), method)
+        method = fallback_method unless testdata == testdataend
       rescue
         method = fallback_method
       end
       method
     end
+
     def compressed_factname_info(factname, _compressmethod)
       factname_info = "#{factname}-info"
       factname_info
@@ -184,6 +188,7 @@ module Facter::Util::Bigbigpuppetfacts
     def compressed_factnames(factname, compressmethod)
       [ compressed_factname_info(factname, compressmethod), compressed_factname_dump(factname, compressmethod) ]
     end
+
     def summarise(srcdata, summariseoptions, summarisedversion = {})
       if summariseoptions.is_a? Hash
         summariseoptions.each do |k0, v0|
@@ -225,9 +230,12 @@ module Facter::Util::Bigbigpuppetfacts
   end
 end
 
+# Module to Help in Resolution when using Bigbigpuppetfacter for setting Compression Method.
 module Facter::Util::Bigbigpuppetfacter
   class << self
     def use_compressmethod(compressmethod_chosen)
+      return if @compressmethod == compressmethod_chosen
+      compressmethod_chosen = Facter::Util::Bigbigpuppetfacts.checkmethod(compressmethod_chosen)
       @compressmethod = compressmethod_chosen
     end
 
@@ -235,29 +243,29 @@ module Facter::Util::Bigbigpuppetfacter
       @compressmethod_fallback = compressmethod_chosen
     end
 
-    def compress(value, method = 'auto')
+    def compress(value, method = 'plain')
       @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
-      if !value.is_a?(String) && ! /^[\^]/.match?(method)
-        method='^json_'+method
+      if !value.is_a?(String) && !%r{^[\^]}.match?(method)
+        method = '^json_' + method
       end
       Facter::Util::Bigbigpuppetfacts.compress(value, method)
-#      [
-#        Facter::Util::Bigbigpuppetfacts.compressmethods[method],
-#        Facter::Util::Bigbigpuppetfacts.compressmethods[ @compressmethod_fallback ],
-#      ].compact[0].call(
-#        JSON.generate(value),
-#      )
+      #      [
+      #        Facter::Util::Bigbigpuppetfacts.compressmethods[method],
+      #        Facter::Util::Bigbigpuppetfacts.compressmethods[ @compressmethod_fallback ],
+      #      ].compact[0].call(
+      #        JSON.generate(value),
+      #      )
     end
 
-    def decompress(_compressed_value, method = 'auto')
+    def decompress(_compressed_value, method = 'plain')
       @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
       Facter::Util::Bigbigpuppetfacts.decompress(value, method)
-#      [
-#        Facter::Util::Bigbigpuppetfacts.decompressmethods[method],
-#        Facter::Util::Bigbigpuppetfacts.decompressmethods[ @compressmethod_fallback ],
-#      ].compact[0].call(
-#        JSON.generate(value),
-#      )
+      #      [
+      #        Facter::Util::Bigbigpuppetfacts.decompressmethods[method],
+      #        Facter::Util::Bigbigpuppetfacts.decompressmethods[ @compressmethod_fallback ],
+      #      ].compact[0].call(
+      #        JSON.generate(value),
+      #      )
     end
   end
 end
