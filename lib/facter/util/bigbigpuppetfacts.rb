@@ -86,9 +86,11 @@ module Facter::Util::Bigbigpuppetfacts
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
 
        'bz' => proc { |data|
-         bz2 = RBzip2.default_adapter::Compressor.new(StringIO.new(data)) # wrap the file into the compressor
+         dfile=StringIO.new('')
+         bz2 = RBzip2.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
          bz2.write data # write the raw data to the compressor
          bz2.close
+         data=dfile.string
          data
        },
 
