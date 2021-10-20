@@ -232,41 +232,39 @@ end
 
 # Module to Help in Resolution when using Bigbigpuppetfacter for setting Compression Method.
 module Facter::Util::Bigbigpuppetfacter
-  class << self
-    def use_compressmethod(compressmethod_chosen)
-      return if @compressmethod == compressmethod_chosen
-      compressmethod_chosen = Facter::Util::Bigbigpuppetfacts.checkmethod(compressmethod_chosen)
-      @compressmethod = compressmethod_chosen
-    end
+  def use_compressmethod(compressmethod_chosen)
+    return if @compressmethod == compressmethod_chosen
+    compressmethod_chosen = Facter::Util::Bigbigpuppetfacts.checkmethod(compressmethod_chosen)
+    @compressmethod = compressmethod_chosen
+  end
 
-    def use_compressmethod_fallback(compressmethod_chosen)
-      @compressmethod_fallback = compressmethod_chosen
-    end
+  def use_compressmethod_fallback(compressmethod_chosen)
+    @compressmethod_fallback = compressmethod_chosen
+  end
 
-    def compress(value, method = 'plain')
-      @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
-      if !value.is_a?(String) && !%r{^[\^]}.match?(method)
-        method = '^json_' + method
-      end
-      Facter::Util::Bigbigpuppetfacts.compress(value, method)
-      #      [
-      #        Facter::Util::Bigbigpuppetfacts.compressmethods[method],
-      #        Facter::Util::Bigbigpuppetfacts.compressmethods[ @compressmethod_fallback ],
-      #      ].compact[0].call(
-      #        JSON.generate(value),
-      #      )
+  def compress(value, method = 'plain')
+    @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
+    if !value.is_a?(String) && !%r{^[\^]}.match?(method)
+      method = '^json_' + method
     end
+    Facter::Util::Bigbigpuppetfacts.compress(value, method)
+    #      [
+    #        Facter::Util::Bigbigpuppetfacts.compressmethods[method],
+    #        Facter::Util::Bigbigpuppetfacts.compressmethods[ @compressmethod_fallback ],
+    #      ].compact[0].call(
+    #        JSON.generate(value),
+    #      )
+  end
 
-    def decompress(_compressed_value, method = 'plain')
-      @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
-      Facter::Util::Bigbigpuppetfacts.decompress(value, method)
-      #      [
-      #        Facter::Util::Bigbigpuppetfacts.decompressmethods[method],
-      #        Facter::Util::Bigbigpuppetfacts.decompressmethods[ @compressmethod_fallback ],
-      #      ].compact[0].call(
-      #        JSON.generate(value),
-      #      )
-    end
+  def decompress(_compressed_value, method = 'plain')
+    @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
+    Facter::Util::Bigbigpuppetfacts.decompress(value, method)
+    #      [
+    #        Facter::Util::Bigbigpuppetfacts.decompressmethods[method],
+    #        Facter::Util::Bigbigpuppetfacts.decompressmethods[ @compressmethod_fallback ],
+    #      ].compact[0].call(
+    #        JSON.generate(value),
+    #      )
   end
 end
 Facter::Util::Resolution.include Facter::Util::Bigbigpuppetfacter
