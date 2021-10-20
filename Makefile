@@ -26,18 +26,20 @@ vendordir:=./lib/vendor
 clean:
 	rm -fr ${vendordir}
 
-all: clean bundle
-	echo bundle it.
+all:
+	pwd
 
 makeid:=${shell echo "makemake$$$$" }
 bundle::
-	[ -e ./Gemfile.local ] && [ -e ./Gemfile ] && cp -f  ./Gemfile  ./Gemfile.${makeid} && cp -f ./Gemfile.local  ./Gemfile
+	[ -e ./Gemfile.mylib] && [ -e ./Gemfile ] && cp -f  ./Gemfile  ./Gemfile.${makeid} && cp -f ./Gemfile.mylib ./Gemfile
 	/opt/puppetlabs/puppet/bin/bundle install --path ${vendordir}/bundle ;
 	/opt/puppetlabs/puppet/bin/bundle config set path ' ${vendordir}/bundle' && /opt/puppetlabs/puppet/bin/bundle install
 	[ -e ./Gemfile.${makeid} ]  && rm  -f  ./Gemfile  && mv  ./Gemfile.${makeid}  ./Gemfile
 
+cleanbundle: clean bundle
+	echo cleanbundle it.
 
-buildfacterutils: all
+buildfacterutils: cleanbundle
 	orgDir=$$PWD; \
 	find  ./  -iname 'lib' | grep gems | grep vendor | while read lib  ; do  \
 		pushd $$PWD ;   \
