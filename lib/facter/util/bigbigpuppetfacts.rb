@@ -2,8 +2,9 @@
 require 'json'
 require 'base64'
 require 'facter'
-require 'facter/util/ruby-xz-1.0.0/lib/xz'
-require 'facter/util/rbzip2-0.3.0/lib/rbzip2'
+
+# require 'facter/util/ruby-xz-1.0.0/lib/xz'
+# require 'facter/util/rbzip2'
 
 ## Module for fact compression, compatible with Facter Cache
 module Facter::Util::Bigbigpuppetfacts
@@ -75,6 +76,8 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def compressmethods
+      autoload :XZ, 'xz'
+      autoload :RBzip2, 'rbzip2'
       {
         'bbpf_xz' => proc { |data| 'bbpf_xz@' + XZ.compress(data) },
        'bbpf_xz_base64' => proc { |data| 'bbpf_xz_base64@' + Base64.encode64(XZ.compress(data)) },
@@ -110,6 +113,8 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def decompressmethods
+      autoload :XZ, 'xz'
+      autoload :RBzip2, 'rbzip2'
       {
         'bbpf_xz' => proc { |data| XZ.decompress(data.gsub(%r{^bbpf_xz@}, '')) },
        'bbpf_xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data.gsub(%r{^bbpf_xz_base64@}, ''))) },
@@ -145,12 +150,12 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def decompress(data, method)
-      methodprocs = method.split('_').map { |m| decompressmethods[m] }
+      methodprocs = method.split('_').reverse.map { |m| decompressmethods[m] }
       pipeprocess(data, methodprocs)
     end
 
     def compress(data, method)
-      methodprocs = method.split('_').reverse.map { |m| compressmethods[m] }
+      methodprocs = method.split('_').map { |m| compressmethods[m] }
       pipeprocess(data, methodprocs)
     end
 
@@ -234,6 +239,10 @@ end
 module Facter::Util::Bigbigpuppetfacter
   def use_compressmethod(compressmethod_chosen)
     return if @compressmethod == compressmethod_chosen
+
+    autoload :XZ, 'xz'
+    autoload :RBzip2, 'rbzip2'
+
     compressmethod_chosen = Facter::Util::Bigbigpuppetfacts.checkmethod(compressmethod_chosen)
     @compressmethod = compressmethod_chosen
   end
