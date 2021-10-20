@@ -80,6 +80,10 @@ if ARGV.count == 0
   Here is the version with the I/O#{' '}
   > time #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT ./Gemfile.xz XZ_DECOMP
 
+
+  Additional Usage inplace of bzip or xz
+  sudo /opt/puppetlabs/bin/facter -p mongodb_instances-dump.bz.base64 |   #{cr} IN - OUT -  decompress_bz_base64
+
 helphelp
 else
   #	binding.pry
@@ -144,11 +148,8 @@ else
     comp_op = %r{compress_.+}.match(ARGV.join(' ')).to_s.sub(%r{compress_}, '')
     decomp_op = %r{decompress_.+}.match(ARGV.join(' ')).to_s.sub(%r{decompress_}, '')
     if decomp_op.empty?
-      if comp_op.empty?
-        raise 'Error No Method Provided'
-      else
-        data = Facter::Util::Bigbigpuppetfacts.compress(data, comp_op)
-      end
+      raise 'Error No Method Provided' if comp_op.empty?
+      data = Facter::Util::Bigbigpuppetfacts.compress(data, comp_op)
     else
       data = Facter::Util::Bigbigpuppetfacts.decompress(data, decomp_op)
     end
