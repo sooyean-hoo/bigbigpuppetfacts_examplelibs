@@ -103,7 +103,7 @@ if ARGV.count == 0
       'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each do |prefix, processor_key_names|
       processor_key_names.reject{ |x| /\^/.match?(x) || /base64/.match?(x) }.each do |commandpostfix|
           puts <<-helphelp
-     > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.gsub(/_/,'.')}.base64 > /tmp/db.tmp  ; time  #{cr} IN /tmp/db.tmp OUT /dev/null  #{prefix}_#{commandpostfix}.base64
+     > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.gsub(/_/,'.')}.base64 > /tmp/db.tmp  ; time  #{cr} IN /tmp/db.tmp OUT /dev/null  #{prefix}_#{commandpostfix.gsub(/./,'_')}_base64
 
      helphelp
         end
