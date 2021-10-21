@@ -70,15 +70,15 @@ if ARGV.count == 0
 
 
   In Linux:::::
-  For benchmarking, we can use the linux command: time. The BenchMark Gem is not used, as this can separate out the ruby processing from the Benchmarking's,
+  For benchmarking, we can use the linux command: time (You may need to do a 'sudo yum install time'). The BenchMark Gem is not used, as this can separate out the ruby processing from the Benchmarking's,
   Also note that we are piping the data into a null. This will help to give us a better view of the performance, as it removes the I/O's contribution.#{' '}
 
-  > time  #{cr} IN ./Gemfile OUT /dev/null  XZ_COMP
+  > /usr/bin/time  #{cr} IN ./Gemfile OUT /dev/null  XZ_COMP
 
-  > time #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT /dev/null XZ_DECOMP
+  > /usr/bin/time #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT /dev/null XZ_DECOMP
 
   Here is the version with the I/O#{' '}
-  > time #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT ./Gemfile.xz XZ_DECOMP
+  > /usr/bin/time #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT ./Gemfile.xz XZ_DECOMP
 
 
   Additional Usage inplace of bzip or xz ..bz2 directly using Facter::Util::Bigbigpuppetfacts
@@ -95,7 +95,7 @@ if ARGV.count == 0
     end
   puts <<-helphelp
   In Linux:::::
-  For benchmarking, we can use the linux command: time. The BenchMark Gem is not used, as this can separate out the ruby processing from the Benchmarking's,
+  For benchmarking, we can use the linux command: time (You may need to do a 'sudo yum install time'). The BenchMark Gem is not used, as this can separate out the ruby processing from the Benchmarking's,
   Also note that we are piping the data into a null. This will help to give us a better view of the performance, as it removes the I/O's contribution.#{' '}
 
   helphelp
@@ -103,7 +103,7 @@ if ARGV.count == 0
       'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each do |prefix, processor_key_names|
       processor_key_names.reject{ |x| /\^/.match?(x) || /base64/.match?(x) }.each do |commandpostfix|
           puts <<-helphelp
-     > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.gsub(/_/,'.')}.base64 > /tmp/db.tmp  ; time  #{cr} IN /tmp/db.tmp OUT /dev/null  #{prefix}_#{commandpostfix.gsub(/\./,'_')}_base64
+     > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.gsub(/_/,'.')}.base64 > /tmp/db.tmp  ; /usr/bin/time  #{cr} IN /tmp/db.tmp OUT /dev/null  #{prefix}_#{commandpostfix.gsub(/\./,'_')}_base64
 
      helphelp
         end
