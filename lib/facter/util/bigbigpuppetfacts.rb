@@ -123,7 +123,14 @@ module Facter::Util::Bigbigpuppetfacts
            data
          },
 
-
+        'bz2auto' => proc { |data|
+          dfile = StringIO.new('')
+          bz2 = RBzip2.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
+          bz2.write data # write the raw data to the compressor
+          bz2.close
+          data = dfile.string
+          data
+        },
        'bz2' => proc { |data|
          dfile = StringIO.new('')
          bz2 = RBzip2.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
@@ -181,7 +188,12 @@ module Facter::Util::Bigbigpuppetfacts
           data
         },
 
-
+        'bz2auto' => proc { |data|
+          bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
+          data = bz2.read
+          bz2.close
+          data
+        },
        'bz2' => proc { |data|
          bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
          data = bz2.read
