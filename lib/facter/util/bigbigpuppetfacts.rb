@@ -74,10 +74,18 @@ module Facter::Util::Bigbigpuppetfacts
       end
       value_direct
     end
+    def autoload_declare
+      libPath = File.join(File.dirname(__FILE__), "./rbzip2-0.3.0/lib/")
+      $LOAD_PATH << libPath unless  $LOAD_PATH.include?(libPath)
 
-    def compressmethods
+      libPath = File.join(File.dirname(__FILE__), "./ruby-xz-1.0.0/lib/")
+      $LOAD_PATH << libPath unless  $LOAD_PATH.include?(libPath)
+
       autoload :XZ, 'xz'
       autoload :RBzip2, 'rbzip2'
+    end
+    def compressmethods
+      autoload_declare
       {
         'bbpf_xz' => proc { |data| 'bbpf_xz@' + XZ.compress(data) },
        'bbpf_xz_base64' => proc { |data| 'bbpf_xz_base64@' + Base64.encode64(XZ.compress(data)) },
@@ -85,7 +93,7 @@ module Facter::Util::Bigbigpuppetfacts
        'xz' => proc { |data| XZ.compress(data) },
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
 
-       'bz' => proc { |data|
+       'bz2' => proc { |data|
          dfile = StringIO.new('')
          bz2 = RBzip2.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
          bz2.write data # write the raw data to the compressor
@@ -115,8 +123,7 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def decompressmethods
-      autoload :XZ, 'xz'
-      autoload :RBzip2, 'rbzip2'
+      autoload_declare
       {
         'bbpf_xz' => proc { |data| XZ.decompress(data.gsub(%r{^bbpf_xz@}, '')) },
        'bbpf_xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data.gsub(%r{^bbpf_xz_base64@}, ''))) },
@@ -124,7 +131,7 @@ module Facter::Util::Bigbigpuppetfacts
        'xz' => proc { |data| XZ.decompress(data) },
        'xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data)) },
 
-       'bz' => proc { |data|
+       'bz2' => proc { |data|
          bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
          data = bz2.read
          bz2.close
@@ -168,11 +175,23 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def testdata
-      "SOOYEANISTESTINGCOMPRESSFACTWITH THIS STRING=+_` <[{ 'aaaa':'a0/s'}]>|!/?@@@@\#\$#%$@^%$#^%^$&^&%*&*(&^(&^)*&^)*&`\"\\"
+      ["SOOYEANISTESTINGCOMPRESSFACTWITH THIS STRING=+_` <[{ 'aaaa':'a0/s'}]>|!/?",
+       "@The quick brown fox jumps over the lazy dog's back",
+       "@THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG'S BACK 1234567890@",
+
+       "@Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
+        "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim",
+        " ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
+        " aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit",
+        " in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
+        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia",
+        " deserunt mollit anim id est laborum.@",
+
+       "@\#\$#%$@^%$#^%^$&^&%*&*(&^(&^)*&^)*&`\"\\"].join ''
     end
 
     def checkmethod(method, fallback_method = 'plain')
-      testdata
+      autoload_declare
       begin
         testdataend = decompress(compress(testdata, method), method)
         method = fallback_method unless testdata == testdataend
@@ -242,8 +261,7 @@ module Facter::Util::Bigbigpuppetfacter
   def use_compressmethod(compressmethod_chosen)
     return if @compressmethod == compressmethod_chosen
 
-    autoload :XZ, 'xz'
-    autoload :RBzip2, 'rbzip2'
+    Facter::Util::Bigbigpuppetfacts.autoload_declare
 
     compressmethod_chosen = Facter::Util::Bigbigpuppetfacts.checkmethod(compressmethod_chosen)
     @compressmethod = compressmethod_chosen
