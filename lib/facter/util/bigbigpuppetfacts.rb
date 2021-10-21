@@ -81,8 +81,17 @@ module Facter::Util::Bigbigpuppetfacts
       libPath = File.join(File.dirname(__FILE__), "./ruby-xz-1.0.0/lib/")
       $LOAD_PATH << libPath unless  $LOAD_PATH.include?(libPath)
 
+      libPath = File.dirname(__FILE__)
+      $LOAD_PATH << libPath unless  $LOAD_PATH.include?(libPath)
+
       autoload :XZ, 'xz'
       autoload :RBzip2, 'rbzip2'
+
+      #### Benchmark and Testing
+      autoload :RBzip2ffi, 'rbzip2ffi'
+      autoload :RBzip2java, 'rbzip2java'
+      autoload :RBzip2ruby, 'rbzip2ruby'
+
     end
     def compressmethods
       autoload_declare
@@ -92,6 +101,33 @@ module Facter::Util::Bigbigpuppetfacts
 
        'xz' => proc { |data| XZ.compress(data) },
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
+
+
+       'bz2ffi' => proc { |data|
+          dfile = StringIO.new('')
+          bz2 = RBzip2ffi.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
+          bz2.write data # write the raw data to the compressor
+          bz2.close
+          data = dfile.string
+          data
+        },
+        'bz2java' => proc { |data|
+           dfile = StringIO.new('')
+           bz2 = RBzip2java.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
+           bz2.write data # write the raw data to the compressor
+           bz2.close
+           data = dfile.string
+           data
+         },
+        'bz2ruby' => proc { |data|
+           dfile = StringIO.new('')
+           bz2 = RBzip2ruby.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
+           bz2.write data # write the raw data to the compressor
+           bz2.close
+           data = dfile.string
+           data
+         },
+
 
        'bz2' => proc { |data|
          dfile = StringIO.new('')
@@ -130,6 +166,26 @@ module Facter::Util::Bigbigpuppetfacts
 
        'xz' => proc { |data| XZ.decompress(data) },
        'xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data)) },
+
+        'bz2ffi' => proc { |data|
+          bz2  = RBzip2ffi.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
+          data = bz2.read
+          bz2.close
+          data
+        },
+        'bz2java' => proc { |data|
+          bz2  = RBzip2java.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
+          data = bz2.read
+          bz2.close
+          data
+        },
+        'bz2ruby' => proc { |data|
+          bz2  = RBzip2ruby.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
+          data = bz2.read
+          bz2.close
+          data
+        },
+
 
        'bz2' => proc { |data|
          bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
