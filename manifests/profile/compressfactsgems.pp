@@ -4,9 +4,9 @@
 #
 # @example
 #   include bigbigpuppetfacts::profile::compressfactsgems
-class bigbigpuppetfacts::profile::compressfactsgems {
+class bigbigpuppetfacts::profile::compressfactsgems(Enum[ 'present', 'absent'] $state = 'present' ) {
   package { ['ruby-xz','rbzip2']:
-    ensure   => present,
+    ensure   => $state,
     provider => puppet_gem,
     # If a custom RubyGem repository needs to be used (such as an internal
     # mirror, or corporate Artifactory repo), pass it with `source`.
