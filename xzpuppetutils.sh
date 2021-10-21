@@ -25,9 +25,9 @@ function perftest(){
 
 }
 
-if [   $1 = 'perftest'    ] ; then
+if [   "$1" = 'perftest'    ] ; then
     perftest
-elif [[   $1 = 'test'     ]] ; then
+elif [[   "$1" = 'test'     ]] ; then
     path2sampleFile=${2:-/dev/zero}
     maxsizetoconsider=${3:-10240 }  # 10MB
     sizeincstep=${4:-2 }         # 2k
@@ -91,6 +91,7 @@ elif [[   $1 = 'test'     ]] ; then
     rm -f $testsrcinc
     rm -f $testdone
 else
+	cd `dirname $0`;
     GEM_HOME=`ls -1d lib/vendor/bundle/ruby/*` RUBYLIB=lib/facter/util/ruby-xz-1.0.0/lib    lib/puppet_x/bigbigfacts/xzpuppetutils.rb  $@
 fi;
 
