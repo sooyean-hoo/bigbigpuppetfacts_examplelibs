@@ -76,14 +76,14 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def autoload_declare
-      libPath = File.join(File.dirname(__FILE__), './rbzip2-0.3.0/lib/')
-      $LOAD_PATH << libPath unless $LOAD_PATH.include?(libPath)
+      lib_path = File.join(File.dirname(__FILE__), './rbzip2-0.3.0/lib/')
+      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
-      libPath = File.join(File.dirname(__FILE__), './ruby-xz-1.0.0/lib/')
-      $LOAD_PATH << libPath unless $LOAD_PATH.include?(libPath)
+      lib_path = File.join(File.dirname(__FILE__), './ruby-xz-1.0.0/lib/')
+      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
-      libPath = File.dirname(__FILE__)
-      $LOAD_PATH << libPath unless $LOAD_PATH.include?(libPath)
+      lib_path = File.dirname(__FILE__)
+      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
       autoload :XZ, 'xz'
       autoload :RBzip2, 'rbzip2'
