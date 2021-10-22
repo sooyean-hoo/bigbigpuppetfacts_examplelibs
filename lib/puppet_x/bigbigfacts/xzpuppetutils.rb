@@ -84,15 +84,16 @@ if ARGV.count == 0
   Additional Usage inplace of bzip or xz ..bz2 directly using Facter::Util::Bigbigpuppetfacts
   helphelp
   {
-    'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each do |prefix, processor_key_names|
-    processor_key_names.reject{ |x| /\^/.match?(x) || /base64/.match?(x) }.each do |commandpostfix|
-        puts <<-helphelp
-   > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.gsub(/_/,'.')}.base64 |   #{cr} IN - OUT -  #{prefix}_#{commandpostfix}.base64
+    'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys
+  }.each do |prefix, processor_key_names|
+    processor_key_names.reject { |x| %r{\^}.match?(x) || %r{base64}.match?(x) }.each do |commandpostfix|
+      puts <<-helphelp
+   > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.tr('_', '.')}.base64 |   #{cr} IN - OUT -  #{prefix}_#{commandpostfix}.base64
 
    helphelp
-      end
-      puts ''
     end
+    puts ''
+  end
   puts <<-helphelp
   In Linux:::::
   For benchmarking, we can use the linux command: time (You may need to do a 'sudo yum install time'). The BenchMark Gem is not used, as this can separate out the ruby processing from the Benchmarking's,
@@ -100,15 +101,16 @@ if ARGV.count == 0
 
   helphelp
   {
-      'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys }.each do |prefix, processor_key_names|
-      processor_key_names.reject{ |x| /\^/.match?(x) || /base64/.match?(x) }.each do |commandpostfix|
-          puts <<-helphelp
-     > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.gsub(/_/,'.')}.base64 > /tmp/db.tmp  ; /usr/bin/time  #{cr} IN /tmp/db.tmp OUT /dev/null  #{prefix}_#{commandpostfix.gsub(/\./,'_')}_base64
+    'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys
+  }.each do |prefix, processor_key_names|
+    processor_key_names.reject { |x| %r{\^}.match?(x) || %r{base64}.match?(x) }.each do |commandpostfix|
+      puts <<-helphelp
+     > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.tr('_', '.')}.base64 > /tmp/db.tmp  ; /usr/bin/time  #{cr} IN /tmp/db.tmp OUT /dev/null  #{prefix}_#{commandpostfix.tr('.', '_')}_base64
 
      helphelp
-        end
-        puts ''
-      end
+    end
+    puts ''
+  end
   puts <<-helphelp
 
 helphelp
