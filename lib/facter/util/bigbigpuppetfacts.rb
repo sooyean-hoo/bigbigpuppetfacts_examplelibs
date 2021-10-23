@@ -101,6 +101,15 @@ module Facter::Util::Bigbigpuppetfacts
         'bbpf_xz' => proc { |data| 'bbpf_xz@' + XZ.compress(data) },
        'bbpf_xz_base64' => proc { |data| 'bbpf_xz_base64@' + Base64.encode64(XZ.compress(data)) },
 
+       '7z::' => proc { |data|
+          dfile = StringIO.new('')
+          SevenZipRuby::Writer.open(dfile) do |szr|
+            szr.add_data data, "file.bin"
+          end
+          data = dfile.string
+          data
+        },
+
        'xz' => proc { |data| XZ.compress(data) },
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
 
@@ -174,6 +183,16 @@ module Facter::Util::Bigbigpuppetfacts
 
        'xz' => proc { |data| XZ.decompress(data) },
        'xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data)) },
+
+        '7z::' => proc { |data|
+           dfile = StringIO.new(data)
+           data = nil
+           SevenZipRuby::Reader.open(dfile) do |szr|
+             smallest_file = szr.entries.select(&:file?).min_by(&:size)  ### There should be only 1 file.. So no worry..
+             data = szr.extract_data(smallest_file)
+           end
+           data
+         },
 
         'bz2::ffi' => proc { |data|
           bz2  = RBzip2::FFI::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor

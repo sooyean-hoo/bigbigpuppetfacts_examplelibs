@@ -31,7 +31,7 @@ all:
 
 makeid:=${shell echo "makemake$$$$" }
 bundle::
-	[ -e ./Gemfile.mylib] && [ -e ./Gemfile ] && cp -f  ./Gemfile  ./Gemfile.${makeid} && cp -f ./Gemfile.mylib ./Gemfile
+	[ -e ./Gemfile.mylib ] && [ -e ./Gemfile ] && cp -f  ./Gemfile  ./Gemfile.${makeid} && cp -f ./Gemfile.mylib ./Gemfile
 	/opt/puppetlabs/puppet/bin/bundle install --path ${vendordir}/bundle ;
 	/opt/puppetlabs/puppet/bin/bundle config set path ' ${vendordir}/bundle' && /opt/puppetlabs/puppet/bin/bundle install
 	[ -e ./Gemfile.${makeid} ]  && rm  -f  ./Gemfile  && mv  ./Gemfile.${makeid}  ./Gemfile

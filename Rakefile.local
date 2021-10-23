@@ -34,3 +34,11 @@ orgDir=$PWD; \
 	cmd
 	%x[ #{command} ]
 end
+
+desc 'Make Target'
+task :make do | t, args|
+	ARGV[0]=''
+	ARGV[1]=''
+	puts "Running..... #{ARGV.join' '}"
+	system("#{ARGV.join' '}")
+end
