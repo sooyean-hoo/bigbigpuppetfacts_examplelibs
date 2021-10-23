@@ -85,6 +85,10 @@ module Facter::Util::Bigbigpuppetfacts
       lib_path = File.join(File.dirname(__FILE__), './seven_zip_ruby-1.3.0/lib/')
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
+      lib_path = File.join(File.dirname(__FILE__), './simple_compress-0.0.1/lib/')
+
+      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
+
 
       lib_path = File.dirname(__FILE__)
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
@@ -92,6 +96,7 @@ module Facter::Util::Bigbigpuppetfacts
       autoload :XZ, 'xz'
       autoload :RBzip2, 'rbzip2'
       autoload :SevenZipRuby, 'seven_zip_ruby'
+      autoload :SimpleCompress, 'simple_compress'
     end
 
     # :: denote sub compression methods
@@ -109,6 +114,8 @@ module Facter::Util::Bigbigpuppetfacts
           data = dfile.string
           data
         },
+
+        'gz' => proc { |data|   SimpleCompress.compress(data) },
 
        'xz' => proc { |data| XZ.compress(data) },
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
@@ -193,6 +200,8 @@ module Facter::Util::Bigbigpuppetfacts
            end
            data
          },
+
+        'gz' => proc { |data|   SimpleCompress.expand(data) },
 
         'bz2::ffi' => proc { |data|
           bz2  = RBzip2::FFI::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
@@ -367,10 +376,16 @@ module Facter::Util::Bigbigpuppetfacter
   end
 
   def compress(value, method = 'plain')
+
+    if block_given?
+      yield(method)
+    end
+
     @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
     if !value.is_a?(String) && !%r{^[\^]}.match?(method)
       method = '^json_' + method
     end
+
     Facter::Util::Bigbigpuppetfacts.compress(value, method)
     #      [
     #        Facter::Util::Bigbigpuppetfacts.compressmethods[method],
@@ -381,7 +396,13 @@ module Facter::Util::Bigbigpuppetfacter
   end
 
   def decompress(_compressed_value, method = 'plain')
+
+    if block_given?
+      yield(method)
+    end
+
     @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
+
     Facter::Util::Bigbigpuppetfacts.decompress(value, method)
     #      [
     #        Facter::Util::Bigbigpuppetfacts.decompressmethods[method],
