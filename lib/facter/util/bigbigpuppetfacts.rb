@@ -82,11 +82,16 @@ module Facter::Util::Bigbigpuppetfacts
       lib_path = File.join(File.dirname(__FILE__), './ruby-xz-1.0.0/lib/')
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
+      lib_path = File.join(File.dirname(__FILE__), './seven_zip_ruby-1.3.0/lib/')
+      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
+
+
       lib_path = File.dirname(__FILE__)
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
       autoload :XZ, 'xz'
       autoload :RBzip2, 'rbzip2'
+      autoload :SevenZipRuby, 'seven_zip_ruby'
     end
 
     # :: denote sub compression methods
@@ -325,6 +330,10 @@ end
 
 # Module to Help in Resolution when using Bigbigpuppetfacter for setting Compression Method.
 module Facter::Util::Bigbigpuppetfacter
+  def compressmethod_used
+    @compressmethod
+  end
+
   def use_compressmethod(compressmethod_chosen)
     return if @compressmethod == compressmethod_chosen
 
