@@ -88,7 +88,7 @@ if ARGV.count == 0
   }.each do |prefix, processor_key_names|
     processor_key_names.reject { |x| %r{\^}.match?(x) || %r{base64}.match?(x) }.each do |commandpostfix|
       puts <<-helphelp
-   > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.tr('_', '.')}.base64 |   #{cr} IN - OUT -  #{prefix}_#{commandpostfix}.base64
+   > sudo /opt/puppetlabs/bin/facter -p somedb_instances-dump.#{commandpostfix.tr('_', '.')}.base64 |   #{cr} IN - OUT -  #{prefix}_#{commandpostfix}_base64
 
    helphelp
     end
@@ -103,7 +103,7 @@ if ARGV.count == 0
   }.each do |prefix, processor_key_names|
     processor_key_names.reject { |x| %r{\^}.match?(x) || %r{base64}.match?(x) }.each do |commandpostfix|
       puts <<-helphelp
-   > #{cr} IN ./Gemfile OUT -  compress_#{commandpostfix}.base64 | #{cr} IN - OUT -  #{prefix}_#{commandpostfix}.base64
+   > #{cr} IN ./Gemfile OUT -  compress_#{commandpostfix}_base64 | #{cr} IN - OUT -  #{prefix}_#{commandpostfix}_base64
 
    helphelp
     end
