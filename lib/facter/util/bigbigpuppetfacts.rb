@@ -89,7 +89,6 @@ module Facter::Util::Bigbigpuppetfacts
 
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
-
       lib_path = File.dirname(__FILE__)
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
@@ -107,15 +106,15 @@ module Facter::Util::Bigbigpuppetfacts
        'bbpf_xz_base64' => proc { |data| 'bbpf_xz_base64@' + Base64.encode64(XZ.compress(data)) },
 
        '7z::' => proc { |data|
-          dfile = StringIO.new('')
-          SevenZipRuby::Writer.open(dfile) do |szr|
-            szr.add_data data, "file.bin"
-          end
-          data = dfile.string
-          data
-        },
+                   dfile = StringIO.new('')
+                   SevenZipRuby::Writer.open(dfile) do |szr|
+                     szr.add_data data, 'file.bin'
+                   end
+                   data = dfile.string
+                   data
+                 },
 
-        'gz' => proc { |data|   SimpleCompress.compress(data) },
+        'gz' => proc { |data| SimpleCompress.compress(data) },
 
        'xz' => proc { |data| XZ.compress(data) },
        'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
@@ -192,16 +191,16 @@ module Facter::Util::Bigbigpuppetfacts
        'xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data)) },
 
         '7z::' => proc { |data|
-           dfile = StringIO.new(data)
-           data = nil
-           SevenZipRuby::Reader.open(dfile) do |szr|
-             smallest_file = szr.entries.select(&:file?).min_by(&:size)  ### There should be only 1 file.. So no worry..
-             data = szr.extract_data(smallest_file)
-           end
-           data
-         },
+                    dfile = StringIO.new(data)
+                    data = nil
+                    SevenZipRuby::Reader.open(dfile) do |szr|
+                      smallest_file = szr.entries.select(&:file?).min_by(&:size) ### There should be only 1 file.. So no worry..
+                      data = szr.extract_data(smallest_file)
+                    end
+                    data
+                  },
 
-        'gz' => proc { |data|   SimpleCompress.expand(data) },
+        'gz' => proc { |data| SimpleCompress.expand(data) },
 
         'bz2::ffi' => proc { |data|
           bz2  = RBzip2::FFI::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
@@ -316,6 +315,10 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def summarise(srcdata, summariseoptions, summarisedversion = {})
+      return summarisedversion unless srcdata.is_a?(Hash) || srcdata.is_a?(Array)
+      return summarisedversion if  !srcdata.is_a?(Hash) && summariseoptions.is_a?(Hash)
+      return summarisedversion if  !srcdata.is_a?(Array) && summariseoptions.is_a?(Array)
+
       if summariseoptions.is_a? Hash
         summariseoptions.each do |k0, v0|
           if  (k0.is_a? String) && (k0 =~ %r{^/.+/$}) ## If  a regex, expand into all matches
@@ -376,7 +379,6 @@ module Facter::Util::Bigbigpuppetfacter
   end
 
   def compress(value, method = 'plain')
-
     if block_given?
       yield(method)
     end
@@ -396,7 +398,6 @@ module Facter::Util::Bigbigpuppetfacter
   end
 
   def decompress(_compressed_value, method = 'plain')
-
     if block_given?
       yield(method)
     end
