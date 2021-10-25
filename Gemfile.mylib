@@ -16,6 +16,8 @@ gem 'rbzip2', '~> 0.3.0'
 
 #gem 'seven_zip_ruby_am', '~> 1.2', '>= 1.2.5.3'
 #gem 'seven_zip_ruby', '~> 1.2', '>= 1.2.4'
+gem 'seven_zip_ruby', '~> 1.3'
+
 
 #### Future Plans
 gem 'simple_compress', '~> 0.0.1'
