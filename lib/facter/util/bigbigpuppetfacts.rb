@@ -37,43 +37,60 @@ module Facter::Util::Bigbigpuppetfacts
   #    self
   #  end
   class << self
+    def namedelim=(delim)
+      @namedelim = delim
+    end
+    def namedelim
+      @namedelim = '.' if @namedelim.nil?
+      @namedelim
+    end
+    def set_namedelim_=(delim)
+      @namedelim_ = delim
+    end
+    def namedelim_
+      @namedelim_ = '_' if @namedelim_.nil?
+      @namedelim_
+    end
+
+
+
     def use_compressmethod(compressmethod_chosen)
       @compressmethod = compressmethod_chosen
     end
 
-    def value(user_query, compressmethod_to_use = 'auto')
-      value_direct = Facter.value(user_query)
-
-      compressmethod_to_use = @compressmethod if compressmethod_to_use == 'auto'
-
-      if %r{-dump.}.match?(user_query)
-        clear_value_direct = value_direct
-        value_direct = user_query.gsub(%r{.}, '_') ### System will use the key to know the compression
-      end
-
-      case value_direct
-      when %r{^bbpf_xz@}
-        value_direct = XZ.compress(value_direct.gsub(%r{^bbpf_xz@}, ''))
-      when %r{^bbpf_xz_base64@}
-        value_direct = XZ.decompress(Base64.decode64(value_direct.gsub(%r{^bbpf_xz_base64@}, '')))
-        value_direct = JSON.parse(value_direct)
-      when %r{xz_base64}
-        value_direct = clear_value_direct
-        value_direct = XZ.decompress(Base64.decode64(value_direct))
-        value_direct = JSON.parse(value_direct)
-      else
-        case compressmethod_to_use
-        when 'xz'
-          value_direct = XZ.compress(value_direct)
-        when 'xz_base64'
-          value_direct = XZ.decompress(Base64.decode64(value_direct))
-          value_direct = JSON.parse(value_direct)
-        else
-          value_direct
-        end
-      end
-      value_direct
-    end
+#    def value(user_query, compressmethod_to_use = 'auto')
+#      value_direct = Facter.value(user_query)
+#
+#      compressmethod_to_use = @compressmethod if compressmethod_to_use == 'auto'
+#
+#      if %r{-dump.}.match?(user_query)
+#        clear_value_direct = value_direct
+#        value_direct = user_query.gsub(%r{.}, '_') ### System will use the key to know the compression
+#      end
+#
+#      case value_direct
+#      when %r{^bbpf_xz@}
+#        value_direct = XZ.compress(value_direct.gsub(%r{^bbpf_xz@}, ''))
+#      when %r{^bbpf_xz_base64@}
+#        value_direct = XZ.decompress(Base64.decode64(value_direct.gsub(%r{^bbpf_xz_base64@}, '')))
+#        value_direct = JSON.parse(value_direct)
+#      when %r{xz_base64}
+#        value_direct = clear_value_direct
+#        value_direct = XZ.decompress(Base64.decode64(value_direct))
+#        value_direct = JSON.parse(value_direct)
+#      else
+#        case compressmethod_to_use
+#        when 'xz'
+#          value_direct = XZ.compress(value_direct)
+#        when 'xz_base64'
+#          value_direct = XZ.decompress(Base64.decode64(value_direct))
+#          value_direct = JSON.parse(value_direct)
+#        else
+#          value_direct
+#        end
+#      end
+#      value_direct
+#    end
 
     def autoload_declare
       lib_path = File.join(File.dirname(__FILE__), './rbzip2-0.3.0/lib/')
@@ -102,8 +119,8 @@ module Facter::Util::Bigbigpuppetfacts
     def compressmethods
       autoload_declare
       {
-        'bbpf_xz' => proc { |data| 'bbpf_xz@' + XZ.compress(data) },
-       'bbpf_xz_base64' => proc { |data| 'bbpf_xz_base64@' + Base64.encode64(XZ.compress(data)) },
+#        'bbpf_xz' => proc { |data| 'bbpf_xz@' + XZ.compress(data) },
+#       'bbpf_xz_base64' => proc { |data| 'bbpf_xz_base64@' + Base64.encode64(XZ.compress(data)) },
 
        '7z::' => proc { |data|
                    dfile = StringIO.new('')
@@ -117,7 +134,7 @@ module Facter::Util::Bigbigpuppetfacts
         'gz' => proc { |data| SimpleCompress.compress(data) },
 
        'xz' => proc { |data| XZ.compress(data) },
-       'xz_base64' => proc { |data| Base64.encode64(XZ.compress(data)) },
+
 
        'bz2::ffi' => proc { |data|
                        dfile = StringIO.new('')
@@ -184,11 +201,10 @@ module Facter::Util::Bigbigpuppetfacts
     def decompressmethods
       autoload_declare
       {
-        'bbpf_xz' => proc { |data| XZ.decompress(data.gsub(%r{^bbpf_xz@}, '')) },
-       'bbpf_xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data.gsub(%r{^bbpf_xz_base64@}, ''))) },
+#        'bbpf_xz' => proc { |data| XZ.decompress(data.gsub(%r{^bbpf_xz@}, '')) },
+#       'bbpf_xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data.gsub(%r{^bbpf_xz_base64@}, ''))) },
 
        'xz' => proc { |data| XZ.decompress(data) },
-       'xz_base64' => proc { |data| XZ.decompress(Base64.decode64(data)) },
 
         '7z::' => proc { |data|
                     dfile = StringIO.new(data)
@@ -255,12 +271,12 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def decompress(data, method)
-      methodprocs = method.split('_').reverse.map { |m| decompressmethods[m] }
+      methodprocs = method.split(namedelim_).reverse.map { |m| decompressmethods[m] }
       pipeprocess(data, methodprocs)
     end
 
     def compress(data, method)
-      methodprocs = method.split('_').map { |m| compressmethods[m] }
+      methodprocs = method.split(  namedelim_).map { |m| compressmethods[m] }
       pipeprocess(data, methodprocs)
     end
 
@@ -299,14 +315,13 @@ module Facter::Util::Bigbigpuppetfacts
       end
       method
     end
-
     def compressed_factname_info(factname, _compressmethod)
       factname_info = "#{factname}-info"
       factname_info
     end
 
     def compressed_factname_dump(factname, compressmethod)
-      factname_data = "#{factname}-dump.#{compressmethod.tr('_', '.')}"
+      factname_data = "#{factname}-dump#{namedelim}#{compressmethod.tr(namedelim_, namedelim)}"
       factname_data
     end
 
@@ -385,7 +400,7 @@ module Facter::Util::Bigbigpuppetfacter
 
     @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
     if !value.is_a?(String) && !%r{^[\^]}.match?(method)
-      method = '^json_' + method
+      method = '^json'+ namedelim_ + method
     end
 
     Facter::Util::Bigbigpuppetfacts.compress(value, method)
