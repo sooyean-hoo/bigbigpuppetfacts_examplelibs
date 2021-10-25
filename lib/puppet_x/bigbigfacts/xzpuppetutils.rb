@@ -82,6 +82,19 @@ if ARGV.count == 0
 
 
   Additional Usage inplace of bzip or xz ..bz2 directly using Facter::Util::Bigbigpuppetfacts
+
+    This is for testing if the compression/decompress working not.
+
+    Available Compression/decompress:
+  helphelp
+  kkkkeys=[]
+  Facter::Util::Bigbigpuppetfacts.decompressmethods.keys.reject {  |x| %r{\^}.match?(x) || %r{base64}.match?(x) }.each do |keys|
+          kkkkeys << keys
+        end
+
+  puts <<-helphelp
+  #{kkkkeys.join '        '}
+
   helphelp
   {
     'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys
@@ -95,8 +108,7 @@ if ARGV.count == 0
     puts ''
   end
   puts <<-helphelp
-  
-  This is for testing if the compression/decompress working not.
+
   helphelp
   {
     'decompress' => Facter::Util::Bigbigpuppetfacts.decompressmethods.keys
