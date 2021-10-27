@@ -13,6 +13,6 @@
         <listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
     </listAttribute>
     <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="/usr/bin/make"/>
-    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-C &quot;${project_loc}&quot; -f '/Users/valente/mym/valentepuppet/Makefile'  check validateOPTS='  --puppet-version=6.22.0 '"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-C &quot;${project_loc}&quot; -f '/Users/valente/mym/valentepuppet/Makefile'  check validateOPTS='  --puppet-version=7.7.0 '"/>
     <stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/bigbigpuppetfacts}"/>
 </launchConfiguration>
