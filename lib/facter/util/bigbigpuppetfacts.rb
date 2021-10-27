@@ -268,9 +268,17 @@ module Facter::Util::Bigbigpuppetfacts
       }
     end
 
+    def decompress_precheck?(method)
+      method.split(namedelim_).map { |m| decompressmethods[m] }.all? { |p| !p.nil? }
+    end
+
     def decompress(data, method)
       methodprocs = method.split(namedelim_).reverse.map { |m| decompressmethods[m] }
       pipeprocess(data, methodprocs)
+    end
+
+    def compress_precheck?(method)
+      method.split(namedelim_).map { |m| compressmethods[m] }.all? { |p| !p.nil? }
     end
 
     def compress(data, method)
@@ -278,9 +286,16 @@ module Facter::Util::Bigbigpuppetfacts
       pipeprocess(data, methodprocs)
     end
 
+    attr_writer :pipeprocess_stats
+
+    attr_reader :pipeprocess_stats
+
     def pipeprocess(data, processpipe)
+      @pipeprocess_stats << data.length unless @pipeprocess_stats.nil?
       processpipe.reduce(data) do |data__, p|
-        p.call(data__)
+        o = p.call(data__)
+        @pipeprocess_stats << o.length unless @pipeprocess_stats.nil?
+        o
       end
     end
 

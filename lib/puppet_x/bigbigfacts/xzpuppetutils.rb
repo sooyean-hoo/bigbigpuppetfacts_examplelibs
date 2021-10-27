@@ -21,6 +21,7 @@ if ARGV.count == 0
   #{cr} IN - =  read input from stdin
   #{cr} OUT - =  print output
 
+  #{cr} STATS =  print Stats at the end
 
   #{cr} BASE64_ENC =  Convert to Base64 conversion
   #{cr} BASE64_DEC =  Convert from Base64 conversion
@@ -87,10 +88,10 @@ if ARGV.count == 0
 
     Available Compression/decompress:
   helphelp
-  kkkkeys=[]
-  Facter::Util::Bigbigpuppetfacts.decompressmethods.keys.reject {  |x| %r{\^}.match?(x) || %r{base64}.match?(x) }.each do |keys|
-          kkkkeys << keys
-        end
+  kkkkeys = []
+  Facter::Util::Bigbigpuppetfacts.decompressmethods.keys.reject { |x| %r{\^}.match?(x) || %r{base64}.match?(x) }.each do |keys|
+    kkkkeys << keys
+  end
 
   puts <<-helphelp
   #{kkkkeys.join '        '}
@@ -172,6 +173,10 @@ else
 
   # when  ARGV.include?('CAT')
   # 	puts(data)
+  if ARGV.include?('STATS')
+    Facter::Util::Bigbigpuppetfacts.pipeprocess_stats = []
+  end
+
   if ARGV.include?('BASE64_ENC')
     require 'base64'
     data = Base64.encode64(data)
@@ -201,8 +206,8 @@ else
     bz2.close
     data
   else
-    comp_op = %r{compress_.+}.match(ARGV.join(' ')).to_s.sub(%r{compress_}, '')
-    decomp_op = %r{decompress_.+}.match(ARGV.join(' ')).to_s.sub(%r{decompress_}, '')
+    comp_op = %r{compress_[^ ]+}.match(ARGV.join(' ')).to_s.sub(%r{compress_}, '')
+    decomp_op = %r{decompress_[^ ]+}.match(ARGV.join(' ')).to_s.sub(%r{decompress_}, '')
     if decomp_op.empty?
       raise 'Error No Method Provided' if comp_op.empty?
       data = Facter::Util::Bigbigpuppetfacts.compress(data, comp_op)
@@ -230,4 +235,5 @@ else
     file.write(data)
     file.close
   end
+  puts "BBPF STATS: #{Facter::Util::Bigbigpuppetfacts.pipeprocess_stats}" unless Facter::Util::Bigbigpuppetfacts.pipeprocess_stats.nil?
 end
