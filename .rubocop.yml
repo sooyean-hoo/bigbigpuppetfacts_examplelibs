@@ -19,8 +19,7 @@ AllCops:
   - "**/Vagrantfile"
   - "**/Guardfile"
   - "lib/vendor/**/*"
-  - "lib/facter/util/rbzip2-0.3.0/**/*"
-  - "lib/facter/util/ruby-xz-1.0.0/**/*"
+  - "lib/facter/util/**/lib/**/*"  
   - "examples/references/**/*"
 Layout/LineLength:
   Description: People have wide screens, use them.
