@@ -21,6 +21,8 @@ AllCops:
   - "lib/vendor/**/*"
   - "lib/facter/util/**/lib/**/*"  
   - "examples/references/**/*"
+  - "examples/tests/*"
+  - "**/xzpuppetutils.*"  
 Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200

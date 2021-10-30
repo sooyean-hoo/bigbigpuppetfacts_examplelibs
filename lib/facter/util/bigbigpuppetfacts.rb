@@ -318,13 +318,28 @@ module Facter::Util::Bigbigpuppetfacts
       t
     end
 
-    def checkmethod(method, fallback_method = 'plain')
+    def checkmethod(method, fallback_method = ['plain'])
       autoload_declare
-      begin
-        testdataend = decompress(compress(testdata, method), method)
-        method = fallback_method unless testdata == testdataend
-      rescue
-        method = fallback_method
+      if fallback_method.is_a? String
+        fallback_method = fallback_method.split(',')
+        fallback_method += ['plain']
+      end
+      if method.is_a? String
+        method = method.split(',')
+      end
+
+      method += fallback_method
+
+      method = method.reduce(nil) do |selectmethod, method2test|
+        if selectmethod.nil? || selectmethod.empty?
+          begin
+            testdataend = decompress(compress(testdata, method2test), method2test)
+            selectmethod = method2test if testdata == testdataend
+          rescue
+            selectmethod = nil
+          end
+        end
+        selectmethod
       end
       method
     end
@@ -380,7 +395,7 @@ module Facter::Util::Bigbigpuppetfacts
         summarisedversion = [] unless summarisedversion.is_a? Array
         srcdata.each do |x|
           new_e = summarise(x, summariseoptions[0])
-          summarisedversion.push(new_e)
+          summarisedversion.push(new_e) unless new_e.nil? || new_e.empty?
         end
       end
       summarisedversion
@@ -399,7 +414,7 @@ module Facter::Util::Bigbigpuppetfacter
 
     Facter::Util::Bigbigpuppetfacts.autoload_declare
 
-    compressmethod_chosen = Facter::Util::Bigbigpuppetfacts.checkmethod(compressmethod_chosen)
+    compressmethod_chosen = Facter::Util::Bigbigpuppetfacts.checkmethod(compressmethod_chosen, @compressmethod_fallback)
     @compressmethod = compressmethod_chosen
   end
 
@@ -407,12 +422,17 @@ module Facter::Util::Bigbigpuppetfacter
     @compressmethod_fallback = compressmethod_chosen
   end
 
-  def compress(value, method = 'plain')
+  def compress(value, method = 'auto')
     if block_given?
       yield(method)
     end
 
-    @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
+    @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil? || @compressmethod_fallback.empty?
+
+    method = @compressmethod if method == 'auto'
+
+    method = Facter::Util::Bigbigpuppetfacts.checkmethod([], @compressmethod_fallback) if method.nil? || method.empty?
+
     if !value.is_a?(String) && !%r{^[\^]}.match?(method)
       method = '^json' + Facter::Util::Bigbigpuppetfacts.namedelim_ + method
     end
@@ -426,12 +446,15 @@ module Facter::Util::Bigbigpuppetfacter
     #      )
   end
 
-  def decompress(_compressed_value, method = 'plain')
+  def decompress(_compressed_value, method = 'auto')
     if block_given?
       yield(method)
     end
 
-    @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil?
+    @compressmethod_fallback = 'plain' if @compressmethod_fallback.nil? || @compressmethod_fallback.empty?
+
+    method = @compressmethod if method == 'auto'
+    method = Facter::Util::Bigbigpuppetfacts.checkmethod([], @compressmethod_fallback) if method.nil? || method.empty?
 
     Facter::Util::Bigbigpuppetfacts.decompress(value, method)
     #      [
