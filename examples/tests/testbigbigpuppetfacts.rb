@@ -1,5 +1,5 @@
 #!/opt/puppetlabs/puppet/bin/ruby -I ../../lib
-
+require 'json'
 require 'facter/util/bigbigpuppetfacts'
 
 
@@ -87,4 +87,4 @@ methodshashs_to_check=methods_to_check.reduce({}){  | rethash, m|
 }
 
 
-puts methodshashs_to_check.to_s
+puts  JSON.pretty_generate(methodshashs_to_check)
