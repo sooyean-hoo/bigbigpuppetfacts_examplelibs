@@ -8,7 +8,7 @@ class RBzip2::FFI::Compressor
 
   extend ::FFI::Library
 
-  ffi_lib 'bz2'
+  ffi_lib ['bz2', 'libbz2.so.1', 'libbz2.dll']   #####  'bz2'        #### Modded by Sooyean.. TODO: Need to be reviewed later... as this is not from default gems
   attach_function :BZ2_bzBuffToBuffCompress,
                   [:pointer, :buffer_inout, :pointer, :uint32, :int, :int, :int],
                   :int

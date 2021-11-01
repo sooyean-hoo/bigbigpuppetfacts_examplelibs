@@ -30,6 +30,10 @@ if ARGV.count == 0
 
   #{cr} CAT =  Just CAT the file
 
+  #{cr} bbpf_XX_YY =  Compress using XX, then followed by YY. After that prefix the final data with this code of the processes chain: "bbpf_XX_YY"
+  #{cr} bbpf__      =  Decompress the data using method described by the prefix
+
+
   helphelp
 
   { 'compress' => Facter::Util::Bigbigpuppetfacts.compressmethods.keys,
@@ -51,14 +55,14 @@ if ARGV.count == 0
   This is will compress the ./Gemfile, base64 encode it and print it.
   #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC
 
-  This is will base64 deencode the ./Gemfile  and print it.
+  This is will base64 encode the ./Gemfile  and print it.
   #{cr} IN ./Gemfile OUT -  BASE64_ENC
 
-  This is will compress the ./Gemfile, base64 encode it, then base64 deencode it, decompress and print it.
+  This is will compress the ./Gemfile, base64 encode it, then base64 decode it, decompress and print it.
   #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT - XZ_DECOMP
 
 
-  This is will compress the ./Gemfile, base64 encode it, then base64 deencode it, decompress and print it.
+  This is will compress the ./Gemfile, base64 encode it, then base64 decode it, decompress and print it.
   #{cr} IN ./Gemfile OUT -  BZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT - BZ_DECOMP
 
 

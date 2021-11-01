@@ -53,3 +53,38 @@ buildfacterutils: cleanbundle
 
 transferaufvalentepuppet: clean
 	rsync -avvpLhrztP *  .*   --exclude 'xzdemorun'  /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts/
+	
+
+
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+makefilepath:=${shell ps -af  -p $$$$ | grep Makefile | grep -v grep | grep -v sed |sed -E 's/^.+ ([^ ]+Makefile) .+$$/\1/g' }
+
+transplant_bbpf:
+	echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@$$PWD
+	srcbase=`dirname ${mkfile_path}` ; \
+	rsync -apLhrztP              --exclude=vendor --exclude=.gitignore  $$srcbase/lib $$srcbase/xzpuppetutils.sh               ./ ;
+
+testtransplant_bbpf:
+	echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@$$PWD
+	srcbase=`dirname ${mkfile_path}` ; \
+	rsync -rpLhzP  -c --dry-run   --itemize-changes  --exclude=vendor --exclude=.gitignore  $$srcbase/lib $$srcbase/xzpuppetutils.sh               ./ ;
+
+detransplant_bbpf:
+	echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@$$PWD
+	srcbase=`dirname ${mkfile_path}` ; \
+	rsync -avvpLhrztP  -c --dry-run   --itemize-changes  --exclude=vendor --exclude=.gitignore  $$srcbase/lib $$srcbase/xzpuppetutils.sh  \
+		           ./ | egrep  '^[>.]' | cut -d\   -f2 | while read line ; do \
+				rsync -pLhzP  -c    ./$$line             /tmp/  ; \
+	done ;
+
+testdetransplant_bbpf:
+	echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@$$PWD
+	srcbase=`dirname ${mkfile_path}` ; \
+	rsync -avvpLhrztP  -c --dry-run   --itemize-changes  --exclude=vendor --exclude=.gitignore  $$srcbase/lib $$srcbase/xzpuppetutils.sh  \
+		           ./ | egrep  '^[>.]' | cut -d\   -f2 | while read line ; do \
+				rsync -pLhzP  -c --dry-run  ./$$line             /tmp/  ; \
+	done ;
+
+	
+	

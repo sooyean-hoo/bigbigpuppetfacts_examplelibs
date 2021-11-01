@@ -22,7 +22,7 @@ AllCops:
   - "lib/facter/util/**/lib/**/*"  
   - "examples/references/**/*"
   - "examples/tests/*"
-  - "**/xzpuppetutils.*"  
+  - "**/xzpuppetutils.*"
 Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200

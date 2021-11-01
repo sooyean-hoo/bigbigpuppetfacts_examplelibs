@@ -13,7 +13,7 @@ module RBzip2::FFI
   def self.init
     begin
       extend ::FFI::Library
-      ffi_lib 'bz2'
+      ffi_lib ['bz2', 'libbz2.so.1', 'libbz2.dll']   #####  'bz2'        #### Modded by Sooyean.. TODO: Need to be reviewed later... as this is not from default gems
     rescue NameError, LoadError
       @@available = false
     end

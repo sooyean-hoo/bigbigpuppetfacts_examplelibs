@@ -53,15 +53,15 @@ orgDir=$PWD; \
 			  cp -r $orgDir/$lib  $lib2move/../    ; \
 		popd 	;	 \
 	done ;
-~/Documents/@Work/SCB/codes/bigbigpuppetfacts ~/Documents/@Work/SCB/codes/bigbigpuppetfacts
-==============================cp -r /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/seven_zip_ruby-1.3.0/lib  seven_zip_ruby-1.3.0/lib/../
-~/Documents/@Work/SCB/codes/bigbigpuppetfacts
-~/Documents/@Work/SCB/codes/bigbigpuppetfacts ~/Documents/@Work/SCB/codes/bigbigpuppetfacts
-==============================cp -r /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/rbzip2-0.3.0/lib  rbzip2-0.3.0/lib/../
-~/Documents/@Work/SCB/codes/bigbigpuppetfacts
-~/Documents/@Work/SCB/codes/bigbigpuppetfacts ~/Documents/@Work/SCB/codes/bigbigpuppetfacts
-==============================cp -r /Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/ruby-xz-1.0.0/lib  ruby-xz-1.0.0/lib/../
-~/Documents/@Work/SCB/codes/bigbigpuppetfacts
+~/Documents/codes/bigbigpuppetfacts ~/Documents/codes/bigbigpuppetfacts
+==============================cp -r /Users/valente/Documents/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/seven_zip_ruby-1.3.0/lib  seven_zip_ruby-1.3.0/lib/../
+~/Documents/codes/bigbigpuppetfacts
+~/Documents/codes/bigbigpuppetfacts ~/Documents/codes/bigbigpuppetfacts
+==============================cp -r /Users/valente/Documents/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/rbzip2-0.3.0/lib  rbzip2-0.3.0/lib/../
+~/Documents/codes/bigbigpuppetfacts
+~/Documents/codes/bigbigpuppetfacts ~/Documents/codes/bigbigpuppetfacts
+==============================cp -r /Users/valente/Documents/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/ruby-xz-1.0.0/lib  ruby-xz-1.0.0/lib/../
+~/Documents/codes/bigbigpuppetfacts
 Cleaning Dependency
 Getting the Dependencies, Based on Gemfile
 [DEPRECATED] The `--path` flag is deprecated because it relies on being remembered across bundler invocations, which bundler will no longer do in future versions. Instead please use `bundle config set path './lib/vendor/bundle'`, and stop using this flag

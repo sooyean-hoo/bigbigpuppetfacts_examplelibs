@@ -2,7 +2,24 @@
 
 
 
+SUDOCMD='sudo -E'
+FACTERCMD='/opt/puppetlabs/bin/facter'
+PUPPETCMD='/opt/puppetlabs/bin/puppet'
 
+rubycmd="/opt/puppetlabs/puppet/bin/ruby -I../lib -I /opt/puppetlabs/puppet/cache/lib"
+taskfile='./ensure_mssql_user.rb'
+taskname='scb_mssql_ura::ensure_mssql_user'
+
+if [ "$MSYSTEM" = 'MINGW64' ]  ; then
+    export PATH="$PATH:/c/Program Files/Puppet Labs/Puppet/puppet/bin"
+	rubycmd="ruby.exe   -I../lib -I /c/ProgramData/PuppetLabs/puppet/cache/lib"
+	SUDOCMD=''
+	FACTERCMD='"C:\\Program Files\\Puppet Labs\\Puppet\\bin\\facter.bat"'
+	PUPPETCMD='"C:\\Program Files\\Puppet Labs\\Puppet\\bin\\puppet.bat"'
+fi;
+
+JQCMD=" jq  "
+which jq 2>&1  > /dev/null ||  JQCMD=" `dirname $0`/settestrunner.sh ctshowjson  "
 
 ### test path2sampleFile  maxsizetoconsider_in_k sizeincstep_in_k rptpath
 ## e.g.    $0   test  /tmp/mongodb_instances-info
@@ -92,7 +109,8 @@ elif [[   "$1" = 'test'     ]] ; then
     rm -f $testdone
 else
 	cd `dirname $0`;
-    GEM_HOME=`ls -1d lib/vendor/bundle/ruby/*` RUBYLIB=lib/facter/util/ruby-xz-1.0.0/lib    lib/puppet_x/bigbigfacts/xzpuppetutils.rb  $@
+    #GEM_HOME=`ls -1d lib/vendor/bundle/ruby/*`
+    RUBYLIB=lib/facter/util/ruby-xz-1.0.0/lib  ${rubycmd}  lib/puppet_x/bigbigfacts/xzpuppetutils.rb  $@
 fi;
 
 

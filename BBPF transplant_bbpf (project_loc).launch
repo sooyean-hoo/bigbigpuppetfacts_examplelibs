@@ -4,7 +4,6 @@
     <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="false"/>
     <mapAttribute key="org.eclipse.debug.core.environmentVariables">
         <mapEntry key="HOME" value="/Users/valente"/>
-        <mapEntry key="LC_CTYPE" value="UTF-8"/>
         <mapEntry key="LOGNAME" value="valente"/>
         <mapEntry key="PATH" value="/usr/local/sbin:/Users/valente/bin/:/usr/local/bin/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/Users/valente/bin:/Users/valente/sbin:/Users/valente/UnixBin:/usr/local/munki:/opt/puppetlabs/pdk/bin:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/valente/.gem/ruby/2.6.0/bin"/>
         <mapEntry key="SHELL" value="/bin/zsh"/>
@@ -14,6 +13,5 @@
         <listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
     </listAttribute>
     <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="/usr/bin/make"/>
-    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-C &quot;${project_loc}&quot; -f '/Users/valente/mym/valentepuppet/Makefile'  rubocop_a validateOPTS='  '"/>
-    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/bigbigpuppetfacts}"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-C &quot;${project_loc}&quot;  -f   ${workspace_loc:/bigbigpuppetfacts}/Makefile   transplant_bbpf"/>
 </launchConfiguration>

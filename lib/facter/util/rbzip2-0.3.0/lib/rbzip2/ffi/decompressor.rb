@@ -16,7 +16,7 @@ class RBzip2::FFI::Decompressor
                   [:pointer],
                   :int
 
-  ffi_lib 'bz2'
+  ffi_lib ['bz2', 'libbz2.so.1', 'libbz2.dll', 'libbz2.a']   #####  'bz2'        #### Modded by Sooyean.. TODO: Need to be reviewed later... as this is not from default gems
   attach_function :BZ2_bzRead,
                   [:pointer, :pointer, :pointer, :int],
                   :int
