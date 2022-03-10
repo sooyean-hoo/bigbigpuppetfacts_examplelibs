@@ -30,8 +30,7 @@ if ARGV.count == 0
 
   #{cr} CAT =  Just CAT the file
 
-  #{cr} bbpf_XX_YY =  Compress using XX, then followed by YY. After that prefix the final data with this code of the processes chain: "bbpf_XX_YY"
-  #{cr} bbpf__      =  Decompress the data using method described by the prefix
+  #{cr} BBPF =  Decompress/Compress using bbpf fileformat
 
 
   helphelp
@@ -74,6 +73,7 @@ if ARGV.count == 0
   ls -l  #{cr} IN - OUT ./ls.xz  XZ_COMP
 
 
+
   In Linux:::::
   For benchmarking, we can use the linux command: time (You may need to do a 'sudo yum install time'). The BenchMark Gem is not used, as this can separate out the ruby processing from the Benchmarking's,
   Also note that we are piping the data into a null. This will help to give us a better view of the performance, as it removes the I/O's contribution.#{' '}
@@ -84,6 +84,24 @@ if ARGV.count == 0
 
   Here is the version with the I/O#{' '}
   > /usr/bin/time #{cr} IN ./Gemfile OUT -  XZ_COMP |#{cr} IN -  OUT - BASE64_ENC | #{cr} IN -  OUT - BASE64_DEC | #{cr} IN -  OUT ./Gemfile.xz XZ_DECOMP
+
+
+
+
+  For BBPF:::
+    This is will compress the ./Gemfile save it as  ./Gemfile.txt .
+    #{cr} IN ./Gemfile OUT ./Gemfile.txt  compress_bbpf_xz_base64
+
+    Piping Stuff in Instead of using a File, and get a compress file of the output: ./ls.o .
+    ls -l  #{cr} IN - OUT ./ls.o  compress_bbpf_xz_base64
+
+
+    This is will decompress the previous-compressed ./Gemfile.txt and print on screen. Compress method will be read off the compressed data.
+    #{cr} IN ./Gemfile.txt  OUT -  BBPF
+
+    Piping Stuff in Instead of using a File, and  decompress the piped previous-compressed  content of ./ls.o . Output will be printed. Compress method will be read off the compressed data.
+    cat ./ls.o | #{cr} IN - OUT - BBPF
+
 
 
   Additional Usage inplace of bzip or xz ..bz2 directly using Facter::Util::Bigbigpuppetfacts
@@ -148,9 +166,16 @@ if ARGV.count == 0
 helphelp
 else
   #	binding.pry
+  argvv=ARGV
 
-  if ARGV.include?('IN')
-    infname = ARGV.reduce('') do |x_whichfollow, x|
+  if argvv.include?('BBPF')
+    argvv=argvv.map{ |x|
+        x= x == 'BBPF' ? "decompress_bbpf" : x
+    }
+  end
+
+  if argvv.include?('IN')
+    infname = argvv.reduce('') do |x_whichfollow, x|
       x_whichfollow = x if  x_whichfollow == 'IN'
       x_whichfollow = x if  x == 'IN'
       x_whichfollow
@@ -163,46 +188,46 @@ else
       file.close
     end
   end
-  data = STDIN.read if ARGV.include?('STDIN') || infname == '-'
+  data = STDIN.read if argvv.include?('STDIN') || infname == '-'
 
-  if ARGV.include?('OUT')
-    outfname = ARGV.reduce('') do |x_whichfollow, x|
+  if argvv.include?('OUT')
+    outfname = argvv.reduce('') do |x_whichfollow, x|
       x_whichfollow = x if  x_whichfollow == 'OUT'
       x_whichfollow = x if  x == 'OUT'
       x_whichfollow
     end
     # outfname=outfname[0] unless outfname.nil? || outfname.empty?
   end
-  outout_stdout = ARGV.include?('STDOUT') || outfname == '-'
+  outout_stdout = argvv.include?('STDOUT') || outfname == '-'
 
-  # when  ARGV.include?('CAT')
+  # when  argvv.include?('CAT')
   # 	puts(data)
-  if ARGV.include?('STATS')
+  if argvv.include?('STATS')
     Facter::Util::Bigbigpuppetfacts.pipeprocess_stats = []
   end
 
-  if ARGV.include?('BASE64_ENC')
+  if argvv.include?('BASE64_ENC')
     require 'base64'
     data = Base64.encode64(data)
-  elsif  ARGV.include?('BASE64_DEC')
+  elsif  argvv.include?('BASE64_DEC')
     require 'base64'
     data = Base64.decode64(data)
 
-  elsif  ARGV.include?('XZ_COMP')
+  elsif  argvv.include?('XZ_COMP')
     require 'xz'
     data = XZ.compress(data)
-  elsif  ARGV.include?('XZ_DECOMP')
+  elsif  argvv.include?('XZ_DECOMP')
     require 'xz'
     data = XZ.decompress(data)
 
-  elsif  ARGV.include?('BZ_COMP')
+  elsif  argvv.include?('BZ_COMP')
     require 'rbzip2'
     # data = RBzip2.compress(data)
     bz2 = RBzip2.default_adapter::Compressor.new(StringIO.new(data)) # wrap the file into the compressor
     bz2.write data # write the raw data to the compressor
     bz2.close
     data
-  elsif  ARGV.include?('BZ_DECOMP')
+  elsif  argvv.include?('BZ_DECOMP')
     require 'rbzip2'
     # data = RBzip2.uncompress(data)
     bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
@@ -210,8 +235,8 @@ else
     bz2.close
     data
   else
-    comp_op = %r{compress_[^ ]+}.match(ARGV.join(' ')).to_s.sub(%r{compress_}, '')
-    decomp_op = %r{decompress_[^ ]+}.match(ARGV.join(' ')).to_s.sub(%r{decompress_}, '')
+    comp_op = %r{compress_[^ ]+}.match(argvv.join(' ')).to_s.sub(%r{compress_}, '')
+    decomp_op = %r{decompress_[^ ]+}.match(argvv.join(' ')).to_s.sub(%r{decompress_}, '')
     if decomp_op.empty?
       raise 'Error No Method Provided' if comp_op.empty?
       data = Facter::Util::Bigbigpuppetfacts.compress(data, comp_op)
@@ -223,7 +248,7 @@ else
     # { 'compress_' => Facter::Util::Bigbigpuppetfacts.compressmethods,
     #   'decompress_' => Facter::Util::Bigbigpuppetfacts.decompressmethods }.each do |prefix, processorhash|
     #   processor = processorhash.select do |pname, _p|
-    #     ARGV.include?(prefix + pname)
+    #     argvv.include?(prefix + pname)
     #   end
     #   unless processor.nil? || processor.empty?
     #     processor = processor[ processor.keys[0] ]

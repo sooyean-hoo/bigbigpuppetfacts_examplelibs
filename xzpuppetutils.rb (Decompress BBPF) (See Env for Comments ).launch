@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.dltk.ruby.launching.RubyLaunchConfigurationType">
+    <booleanAttribute key="enableBreakOnFirstLine" value="false"/>
+    <booleanAttribute key="enableDbgpLogging" value="false"/>
+    <stringAttribute key="interpreterArguments" value="-I lib/facter/util/ruby-xz-1.0.0/lib"/>
+    <stringAttribute key="mainScript" value="lib/puppet_x/bigbigfacts/xzpuppetutils.rb"/>
+    <stringAttribute key="nature" value="org.eclipse.dltk.ruby.core.nature"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/bigbigpuppetfacts/lib/puppet_x/bigbigfacts/xzpuppetutils.rb"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <mapAttribute key="org.eclipse.debug.core.environmentVariables">
+        <mapEntry key="Comments" value="( Prep with ./xzpuppetutils.sh IN ./Gemfile OUT /tmp/a.txt  compress_bbpf_gz_base64 )"/>
+    </mapAttribute>
+    <booleanAttribute key="org.eclipse.dltk.launching.debugConsole" value="true"/>
+    <stringAttribute key="process_factory_id" value="org.eclipse.dltk.launching.scriptProcessFactory"/>
+    <stringAttribute key="project" value="bigbigpuppetfacts"/>
+    <stringAttribute key="scriptArguments" value="IN /tmp/a.txt OUT -  BBPF"/>
+</launchConfiguration>
