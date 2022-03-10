@@ -277,7 +277,7 @@ module Facter::Util::Bigbigpuppetfacts
           data
         }, # Special Method which prefix the final Data with the compression methods/process e.g. "bbpf_XX_YY"
         'bbpf::start' => proc { |data, _info: {}| data }, # Special Method which prefix the final Data with the compression methods/process e.g. "bbpf_XX_YY"
-        'bbpf::end' => proc { |data, _info: {}|
+        'bbpf::end' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
           _info['m'].to_s + namedelim_ + 'bbpf@' + data
         }, # Special Method which prefix the final Data with the compression methods/process e.g. "bbpf_XX_YY"
 
