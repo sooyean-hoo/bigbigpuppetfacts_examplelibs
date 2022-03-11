@@ -281,6 +281,15 @@ module Facter::Util::Bigbigpuppetfacts
           _info['m'].to_s + namedelim_ + 'bbpf@' + data
         }, # Special Method which prefix the final Data with the compression methods/process e.g. "bbpf_XX_YY"
 
+        'dataurl' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
+          m = _info['m'].gsub(%r{dataurl_}, '')
+          data = compress(data, m)
+
+          data = "data:text/plain;base64,#{data.delete("\n")}"
+          _info['continue'] = false
+          data
+        },
+
         'plain' => proc { |data, _info: {}| data },
         '^nil::' => proc { |_data, _info: {}| nil }
       }
