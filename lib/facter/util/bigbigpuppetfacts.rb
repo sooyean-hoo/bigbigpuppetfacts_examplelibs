@@ -290,6 +290,15 @@ module Facter::Util::Bigbigpuppetfacts
           data
         },
 
+        'bash' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
+          m = _info['m'].gsub(%r{bash_}, '')
+          data = compress(data, m)
+
+          data = "./xzpuppetutils.sh IN - OUT ./  decompress_#{m} <<__bashCompressBBPFDATA\n#{data}\n__bashCompressBBPFDATA\n"
+          _info['continue'] = false
+          data
+        },
+
         'plain' => proc { |data, _info: {}| data },
         '^nil::' => proc { |_data, _info: {}| nil }
       }
