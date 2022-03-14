@@ -294,7 +294,9 @@ module Facter::Util::Bigbigpuppetfacts
           m = _info['m'].gsub(%r{bash_}, '')
           data = compress(data, m)
 
-          data = "./xzpuppetutils.sh IN - OUT ./  decompress_#{m} <<__bashCompressBBPFDATA\n#{data}\n__bashCompressBBPFDATA\n"
+          data = "./xzpuppetutils.sh IN - OUT ./bashCompressBBPFDATA#{(0...8).map {
+                                                                        (65 + rand(26)).chr
+                                                                      } .join}.txt  decompress_#{m} <<__bashCompressBBPFDATA\n#{data}\n__bashCompressBBPFDATA\n"
           _info['continue'] = false
           data
         },
