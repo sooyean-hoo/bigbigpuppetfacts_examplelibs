@@ -123,7 +123,6 @@ module Facter::Util::Bigbigpuppetfacts
       autoload :Open3, 'open3'
     end
 
-    DEFAULT_ERROR_MSG = 'FATAL ERROR During Processing: Please use another processing method.'.freeze
     # :: denote sub compression methods
     def compressmethods
       autoload_declare
@@ -141,7 +140,7 @@ module Facter::Util::Bigbigpuppetfacts
         },
         '::error' => proc { |_data, error_msg = '', error_msg_prefix = '', error_msg_postfix = '', _info: {}|
                        error_msg = checkmethod_geterrormsg if error_msg.empty?
-                       error_msg = DEFAULT_ERROR_MSG if error_msg.nil? || error_msg.empty?
+                       error_msg = @const_default_error_msg if error_msg.nil? || error_msg.empty?
                        error_msg_prefix + error_msg + error_msg_postfix
                      },
         '::simulateruntimeerror' => proc { |data, _info: {}|
@@ -530,14 +529,16 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     def checkmethod_geterrormsg
+      @const_default_error_msg ||= 'FATAL ERROR During Processing: Please use another processing method.'
+
       return nil if @checkmethod_errormsg_.nil? || @checkmethod_errormsg_.is_a?(String) && @checkmethod_errormsg_.empty?
 
-      if @checkmethod_errormsg_.is_a?(String) && @checkmethod_errormsg_ == DEFAULT_ERROR_MSG
+      if @checkmethod_errormsg_.is_a?(String) && @checkmethod_errormsg_ == @const_default_error_msg
         @checkmethod_errormsg_
       else
         e = @checkmethod_errormsg_
         errorjson = {}
-        errorjson['value'] = DEFAULT_ERROR_MSG
+        errorjson['value'] = @const_default_error_msg
         errorjson['exceptiontype'] = e.class.to_s
         errorjson['message'] =
           "Error during processing: #{$ERROR_INFO}\n" \
@@ -548,7 +549,7 @@ module Facter::Util::Bigbigpuppetfacts
       end
     end
 
-    def checkmethod_seterrormsg(msg = DEFAULT_ERROR_MSG)
+    def checkmethod_seterrormsg(msg = @const_default_error_msg)
       @checkmethod_errormsg_ = msg
     end
 
