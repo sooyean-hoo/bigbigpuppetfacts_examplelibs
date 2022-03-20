@@ -2,9 +2,9 @@
   "name": "sooyeanhoo-bigbigpuppetfacts",
   "version": "0.1.1",
   "author": "Hoo Sooyean 何書淵",
-  "summary": "",
+  "summary": "Enable Fact Compression in custom facts. It only provide the apis and a fact which check the support matrix of the compression methods.",
   "license": "Apache-2.0",
-  "source": "",
+  "source": "https://github.com/sooyean-hoo/bigbigpuppetfacts",
   "dependencies": [
 
   ],
