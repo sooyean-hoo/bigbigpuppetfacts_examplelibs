@@ -86,5 +86,8 @@ testdetransplant_bbpf:
 				rsync -pLhzP  -c --dry-run  ./$$line             /tmp/  ; \
 	done ;
 
+puppetforgebuild::
+	git checkout main ;
+	pdk build
 	
 	
