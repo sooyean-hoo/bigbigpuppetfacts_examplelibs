@@ -53,6 +53,8 @@ module Facter::Util::Bigbigpuppetfacts
       @namedelim_
     end
 
+    def loaddrivers; end
+
     def use_compressmethod(compressmethod_chosen)
       @compressmethod = compressmethod_chosen
     end
