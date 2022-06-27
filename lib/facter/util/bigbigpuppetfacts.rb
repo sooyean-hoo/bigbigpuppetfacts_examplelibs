@@ -661,12 +661,12 @@ module Facter::Util::Bigbigpuppetfacter
     end
   end
 
-    alias encode compress
-    alias decode decompress
+  alias encode compress
+  alias decode decompress
 
-    alias use_encodemethod_fallback use_compressmethod_fallback
-    alias use_encodemethod use_compressmethod
-    alias encodemethod_used compressmethod_used
+  alias use_encodemethod_fallback use_compressmethod_fallback
+  alias use_encodemethod use_compressmethod
+  alias encodemethod_used compressmethod_used
 end
 Facter::Util::Resolution.include Facter::Util::Bigbigpuppetfacter
 Facter::Core::Aggregate.include Facter::Util::Bigbigpuppetfacter
