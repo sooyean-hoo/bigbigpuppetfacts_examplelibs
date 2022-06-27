@@ -16,7 +16,11 @@ class BBPFDrivers::XZ
     }
   end
 
-  def test_decomp_comp
+  alias encodemethods compressmethods
+
+  alias decodemethods decompressmethods
+
+  def test_methods
     {
       'xz' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
         decompressmethods_proc['xz'].call(

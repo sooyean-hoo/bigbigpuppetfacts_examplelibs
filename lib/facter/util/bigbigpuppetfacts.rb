@@ -55,7 +55,7 @@ module Facter::Util::Bigbigpuppetfacts
 
     def drivers
       return @drivers unless @drivers.nil?
-      @drivers = { compress: {}, decompress: {}, test: {}, }
+      @drivers = { encode: {}, decode: {}, test: {}, }
       Dir[File.join(File.dirname(__FILE__), '../../puppet_x/bigbigfacts/drivers/*.rb') ].each do |bbpfdriver|
         class_name = File.open(bbpfdriver).grep(%r{^.*class })
         next if class_name.nil? || class_name.empty? || !class_name[0].include?('BBPFDrivers::')
@@ -64,9 +64,9 @@ module Facter::Util::Bigbigpuppetfacts
         load(bbpfdriver)
 
         driverobj = Object.const_get(class_name.to_s).new
-        @drivers[:compress].merge! driverobj.compressmethods
-        @drivers[:decompress].merge! driverobj.decompressmethods
-        @drivers[:test].merge! driverobj.test_decomp_comp
+        @drivers[:encode].merge! driverobj.encodemethods
+        @drivers[:decode].merge! driverobj.decodemethods
+        @drivers[:test].merge! driverobj.test_methods
 
         driverobj.autoload_declare
       end
@@ -136,6 +136,7 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     # :: denote sub compression methods
+    alias encodemethods compressmethods
     def compressmethods
       autoload_declare
       {
@@ -257,9 +258,9 @@ module Facter::Util::Bigbigpuppetfacts
 
         'plain' => proc { |data, _info: {}| data },
         '^nil::' => proc { |_data, _info: {}| nil }
-      }.merge!(drivers[:compress])
+      }.merge!(drivers[:encode])
     end
-
+    alias decodemethods decompressmethods
     def decompressmethods
       autoload_declare
       {
@@ -344,7 +345,7 @@ module Facter::Util::Bigbigpuppetfacts
         'bbpf::end' => proc { |data, _info: {}|  data  }, # Special Method which prefix the final Data with the compression methods/process e.g. "bbpf_XX_YY"
         'plain' => proc { |data, _info: {}| data },
         '^nil::' => proc { |_data, _info: {}| nil }
-      }.merge!(drivers[:decompress])
+      }.merge!(drivers[:decode])
     end
 
     def decompress_precheck?(methods)

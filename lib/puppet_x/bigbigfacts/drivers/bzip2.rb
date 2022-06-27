@@ -115,7 +115,7 @@ class BBPFDrivers::BZIP2
     }
   end
 
-  def test_decomp_comp
+  def test_methods
     {
       # Empty, so use the default one.
       #        'bz2' => proc { |data, info: {}|
@@ -125,6 +125,9 @@ class BBPFDrivers::BZIP2
       #        }
     }
   end
+
+  alias encodemethods compressmethods
+  alias decodemethods decompressmethods
 
   def autoload_declare
     lib_path = File.join(File.dirname(__FILE__), '../../../facter/util/bzip2-ffi-1.1.0/lib/')
