@@ -136,7 +136,6 @@ module Facter::Util::Bigbigpuppetfacts
     end
 
     # :: denote sub compression methods
-    alias encodemethods compressmethods
     def compressmethods
       autoload_declare
       {
@@ -260,7 +259,7 @@ module Facter::Util::Bigbigpuppetfacts
         '^nil::' => proc { |_data, _info: {}| nil }
       }.merge!(drivers[:encode])
     end
-    alias decodemethods decompressmethods
+    alias encodemethods compressmethods
     def decompressmethods
       autoload_declare
       {
@@ -347,6 +346,7 @@ module Facter::Util::Bigbigpuppetfacts
         '^nil::' => proc { |_data, _info: {}| nil }
       }.merge!(drivers[:decode])
     end
+    alias decodemethods decompressmethods
 
     def decompress_precheck?(methods)
       methods = methods.split(',') if methods.is_a? String
