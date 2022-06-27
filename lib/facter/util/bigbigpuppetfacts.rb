@@ -53,7 +53,25 @@ module Facter::Util::Bigbigpuppetfacts
       @namedelim_
     end
 
-    def loaddrivers; end
+    def drivers
+      return @drivers unless @drivers.nil?
+      @drivers = { compress: {}, decompress: {}, test: {}, }
+      Dir[File.join(File.dirname(__FILE__), '../../puppet_x/bigbigfacts/drivers/*.rb') ].each do |bbpfdriver|
+        class_name = File.open(bbpfdriver).grep(%r{^.*class })
+        next if class_name.nil? || class_name.empty? || !class_name[0].include?('BBPFDrivers::')
+        class_name = class_name[0].gsub(%r{^.*class }, '') unless class_name.nil?
+        class_name = class_name.delete("\n") unless class_name.nil?
+        load(bbpfdriver)
+
+        driverobj = Object.const_get(class_name.to_s).new
+        @drivers[:compress].merge! driverobj.compressmethods
+        @drivers[:decompress].merge! driverobj.decompressmethods
+        @drivers[:test].merge! driverobj.test_decomp_comp
+
+        driverobj.autoload_declare
+      end
+      @drivers
+    end
 
     def use_compressmethod(compressmethod_chosen)
       @compressmethod = compressmethod_chosen
@@ -94,12 +112,6 @@ module Facter::Util::Bigbigpuppetfacts
     #    end
 
     def autoload_declare
-      lib_path = File.join(File.dirname(__FILE__), './bzip2-ffi-1.1.0/lib/')
-      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
-
-      lib_path = File.join(File.dirname(__FILE__), './rbzip2-0.3.0/lib/')
-      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
-
       lib_path = File.join(File.dirname(__FILE__), './ruby-xz-1.0.0/lib/')
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
@@ -116,11 +128,9 @@ module Facter::Util::Bigbigpuppetfacts
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
       autoload :XZ, 'xz'
-      autoload :RBzip2, 'rbzip2'
       autoload :SevenZipRuby, 'seven_zip_ruby'
       autoload :SimpleCompress, 'simple_compress'
       autoload :Zlib, 'zlib'
-      autoload :Bzip2, 'bzip2/ffi'
 
       autoload :Open3, 'open3'
     end
@@ -196,63 +206,6 @@ module Facter::Util::Bigbigpuppetfacts
 
        'xz' => proc { |data, _info: {}| XZ.compress(data) },
 
-       'bz2::ffi' => proc { |data, _info: {}|
-                       dfile = StringIO.new('')
-                       bz2 = RBzip2::FFI::Compressor.new(dfile) # wrap the file into the compressor
-                       bz2.write data # write the raw data to the compressor
-                       bz2.close
-                       data = dfile.string
-                       data
-                     },
-        'bz2::java' => proc { |data, _info: {}|
-                         dfile = StringIO.new('')
-                         bz2 = RBzip2::Java::Compressor.new(dfile) # wrap the file into the compressor
-                         bz2.write data # write the raw data to the compressor
-                         bz2.close
-                         data = dfile.string
-                         data
-                       },
-        'bz2::ruby' => proc { |data, _info: {}|
-                         dfile = StringIO.new('')
-                         bz2 = RBzip2::Ruby::Compressor.new(dfile) # wrap the file into the compressor
-                         bz2.write data # write the raw data to the compressor
-                         bz2.close
-                         data = dfile.string
-                         data
-                       },
-
-        'bz2::cmd' => proc { |data, _info: {}|
-                        compressmethods['::shellout'].call(data, 'bzip2 -z --best -s -qc ', 'tee')
-                      },
-
-        'bz2::auto' => proc { |data, _info: {}|
-          dfile = StringIO.new('')
-          bz2 = RBzip2.default_adapter::Compressor.new(dfile) # wrap the file into the compressor
-          bz2.write data # write the raw data to the compressor
-          bz2.close
-          data = dfile.string
-          data
-        },
-
-        'bzip2' => proc { |data, _info: {}|
-          dfile = StringIO.new('')
-          Bzip2::FFI::Writer.write(dfile, data)
-          data = dfile.string
-          data
-        },
-
-       'bz2' => proc { |data, _info: {}|
-                  begin
-                    compressmethods['bzip2'].call(data)
-                  rescue NameError, LoadError, Bzip2::FFI::Error::MagicDataError
-                    begin
-                      compressmethods['bz2::auto'].call(data)
-                    rescue NameError, LoadError
-                      compressmethods['bz2::ruby'].call(data)
-                    end
-                  end
-                },
-
         'base64' => proc { |data, _info: {}| Base64.encode64(data) },
 
         '^json' => proc { |data, _info: {}|
@@ -304,7 +257,7 @@ module Facter::Util::Bigbigpuppetfacts
 
         'plain' => proc { |data, _info: {}| data },
         '^nil::' => proc { |_data, _info: {}| nil }
-      }
+      }.merge!(drivers[:compress])
     end
 
     def decompressmethods
@@ -363,52 +316,6 @@ module Facter::Util::Bigbigpuppetfacts
 
         'xz' => proc { |data, _info: {}| XZ.decompress(data) },
 
-        'bz2::ffi' => proc { |data, _info: {}|
-          bz2  = RBzip2::FFI::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
-          data = bz2.read
-          bz2.close
-          data
-        },
-        'bz2::java' => proc { |data, _info: {}|
-          bz2  = RBzip2::Java::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
-          data = bz2.read
-          bz2.close
-          data
-        },
-        'bz2::ruby' => proc { |data, _info: {}|
-          bz2  = RBzip2::Ruby::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
-          data = bz2.read
-          bz2.close
-          data
-        },
-        'bz2::auto' => proc { |data, _info: {}|
-          bz2  = RBzip2.default_adapter::Decompressor.new(StringIO.new(data)) # wrap the file into the decompressor
-          data = bz2.read
-          bz2.close
-          data
-        },
-
-        'bz2::cmd' => proc { |data, _info: {}|
-                        compressmethods['::shellout'].call(data, 'bzip2 -d --best -s -qc ', 'tee')
-                      },
-
-        'bzip2' => proc { |data, _info: {}|
-          data = Bzip2::FFI::Reader.read(StringIO.new(data))
-          data
-        },
-
-       'bz2' => proc { |data, _info: {}|
-         begin
-           decompressmethods['bzip2'].call(data)
-         rescue NameError, LoadError, Bzip2::FFI::Error::MagicDataError
-           begin
-             decompressmethods['bz2::auto'].call(data)
-           rescue NameError, LoadError
-             decompressmethods['bz2::ruby'].call(data)
-           end
-         end
-       },
-
        'base64' => proc { |data, _info: {}| Base64.decode64(data) },
        '^json' => proc { |data, _info: {}|
                     begin
@@ -437,7 +344,7 @@ module Facter::Util::Bigbigpuppetfacts
         'bbpf::end' => proc { |data, _info: {}|  data  }, # Special Method which prefix the final Data with the compression methods/process e.g. "bbpf_XX_YY"
         'plain' => proc { |data, _info: {}| data },
         '^nil::' => proc { |_data, _info: {}| nil }
-      }
+      }.merge!(drivers[:decompress])
     end
 
     def decompress_precheck?(methods)
@@ -572,6 +479,8 @@ module Facter::Util::Bigbigpuppetfacts
           begin
             checkmethod_seterrormsg unless method2test == '::error'
             testdataend = decompress(compress(testdata, method2test), method2test) unless %r{::simulate}.match?(method2test)
+            testdataend = drivers[:test][method2test].call(testdata) if drivers[:test].include?(method2test)
+
             # %r{^::}.match?(method2test) Give a pass to internal methods...including the ::error, so we can force for an error in a testing environment
             selectmethod = method2test if testdata == testdataend || %r{::simulate}.match?(method2test) || %r{^::}.match?(method2test) || Regexp.new("#{namedelim}::").match?(method2test)
           rescue LoadError => e

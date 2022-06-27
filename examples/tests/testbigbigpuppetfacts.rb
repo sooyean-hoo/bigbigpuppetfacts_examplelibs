@@ -12,6 +12,14 @@ end
 bb = BBPFTester.new
 
 
+# Use case 0 Current
+fallback_methods= 'plain'
+method2set = 'bz2_base64'
+puts "==fallback_methods=#{fallback_methods}=\n=method2set=#{method2set}="
+bb.use_compressmethod_fallback fallback_methods
+bb.use_compressmethod('^json_' + method2set)
+puts "==bb.compressmethod_used=#{bb.compressmethod_used}="
+puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
 
 
