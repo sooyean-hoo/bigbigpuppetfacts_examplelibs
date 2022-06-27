@@ -53,22 +53,26 @@ module Facter::Util::Bigbigpuppetfacts
       @namedelim_
     end
 
-    def drivers
+    def drivers(driverspaths = [])
       return @drivers unless @drivers.nil?
       @drivers = { encode: {}, decode: {}, test: {}, }
-      Dir[File.join(File.dirname(__FILE__), '../../puppet_x/bigbigfacts/drivers/*.rb') ].each do |bbpfdriver|
-        class_name = File.open(bbpfdriver).grep(%r{^.*class })
-        next if class_name.nil? || class_name.empty? || !class_name[0].include?('BBPFDrivers::')
-        class_name = class_name[0].gsub(%r{^.*class }, '') unless class_name.nil?
-        class_name = class_name.delete("\n") unless class_name.nil?
-        load(bbpfdriver)
 
-        driverobj = Object.const_get(class_name.to_s).new
-        @drivers[:encode].merge! driverobj.encodemethods
-        @drivers[:decode].merge! driverobj.decodemethods
-        @drivers[:test].merge! driverobj.test_methods
+      driverspaths = [  File.join(File.dirname(__FILE__), '../../puppet_x/bigbigfacts/drivers/*.rb') ] if driverspaths.empty?
+      driverspaths.each do |driverspath|
+        Dir[ driverspath].each do |bbpfdriver|
+          class_name = File.open(bbpfdriver).grep(%r{^.*class })
+          next if class_name.nil? || class_name.empty? || !class_name[0].include?('BBPFDrivers::')
+          class_name = class_name[0].gsub(%r{^.*class }, '') unless class_name.nil?
+          class_name = class_name.delete("\n") unless class_name.nil?
+          load(bbpfdriver)
 
-        driverobj.autoload_declare
+          driverobj = Object.const_get(class_name.to_s).new
+          @drivers[:encode].merge! driverobj.encodemethods
+          @drivers[:decode].merge! driverobj.decodemethods
+          @drivers[:test].merge! driverobj.test_methods
+
+          driverobj.autoload_declare
+        end
       end
       @drivers
     end
