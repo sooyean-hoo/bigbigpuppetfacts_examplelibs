@@ -116,12 +116,6 @@ module Facter::Util::Bigbigpuppetfacts
     #    end
 
     def autoload_declare
-      lib_path = File.join(File.dirname(__FILE__), './ruby-xz-1.0.0/lib/')
-      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
-
-      lib_path = File.join(File.dirname(__FILE__), './seven_zip_ruby-1.3.0/lib/')
-      $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
-
       lib_path = File.join(File.dirname(__FILE__), './simple_compress-0.0.1/lib/')
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
@@ -131,8 +125,6 @@ module Facter::Util::Bigbigpuppetfacts
       lib_path = File.join(File.dirname(__FILE__), '../../')
       $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
-      autoload :XZ, 'xz'
-      autoload :SevenZipRuby, 'seven_zip_ruby'
       autoload :SimpleCompress, 'simple_compress'
       autoload :Zlib, 'zlib'
 
@@ -172,31 +164,6 @@ module Facter::Util::Bigbigpuppetfacts
                                     compressmethods['::simulateruntimeerror'].call(data)
                                   },
 
-        # 7z, zip, gzip, bzip2 or tar. 7z xz
-        '7z::xz::shellout' => proc { |data, _info: {}|
-                                compressmethods['::shellout'].call(data, '7za -txz -an -si -so     a', 'tee')
-                              },
-        '7z::gzip::shellout' => proc { |data, _info: {}|
-                                  compressmethods['::shellout'].call(data, '7za -tgzip -an -si -so     a', 'tee')
-                                },
-        '7z::bzip2::shellout' => proc { |data, _info: {}|
-                                   compressmethods['::shellout'].call(data, '7za -tbzip2 -an -si -so     a', 'tee')
-                                 },
-        '7z::zip::shellout' => proc { |data, _info: {}|
-                                 compressmethods['::shellout'].call(data, '7za -tzip -an -si -so     a', 'tee')
-                               },
-        '7z::shellout' => proc { |data, _info: {}|
-                            compressmethods['::shellout'].call(data, '7za -txz -an -si -so     a', 'tee')
-                          },
-        '7z::' => proc { |data, _info: {}|
-                    dfile = StringIO.new('')
-                    SevenZipRuby::Writer.open(dfile) do |szr|
-                      szr.add_data data, 'file.bin'
-                    end
-                    data = dfile.string
-                    data
-                  },
-
         'gz::simplecompress' => proc { |data, _info: {}| SimpleCompress.compress(data) },
         'gz::zlibgzip' => proc { |data, _info: {}|
           buf = StringIO.new
@@ -207,8 +174,6 @@ module Facter::Util::Bigbigpuppetfacts
         },
         'gz::zlib' => proc { |data, _info: {}| Zlib::Deflate.deflate(data, Zlib::BEST_COMPRESSION) },
         'gz' => proc { |data, _info: {}| compressmethods['gz::zlibgzip'].call(data) },
-
-       'xz' => proc { |data, _info: {}| XZ.compress(data) },
 
         'base64' => proc { |data, _info: {}| Base64.encode64(data) },
 
@@ -284,30 +249,6 @@ module Facter::Util::Bigbigpuppetfacts
           # compressmethods['::simulateruntimeerror'].call(data)
           data
         },
-        '7z::xz::shellout' => proc { |data, _info: {}|
-                                compressmethods['::shellout'].call(data, '7za -txz -an -si -so     x', 'tee')
-                              },
-        '7z::gzip::shellout' => proc { |data, _info: {}|
-                                  compressmethods['::shellout'].call(data, '7za -tgzip -an -si -so     x', 'tee')
-                                },
-        '7z::bzip2::shellout' => proc { |data, _info: {}|
-                                   compressmethods['::shellout'].call(data, '7za -tbzip2 -an -si -so     x', 'tee')
-                                 },
-        '7z::zip::shellout' => proc { |data, _info: {}|
-                                 compressmethods['::shellout'].call(data, '7za -tzip -an -si -so     x', 'tee')
-                               },
-        '7z::shellout' => proc { |data, _info: {}|
-                            compressmethods['::shellout'].call(data, '7za -txz -an -si -so     x', 'tee')
-                          },
-        '7z::' => proc { |data, _info: {}|
-                    dfile = StringIO.new(data)
-                    data = nil
-                    SevenZipRuby::Reader.open(dfile) do |szr|
-                      smallest_file = szr.entries.select(&:file?).min_by(&:size) ### There should be only 1 file.. So no worry..
-                      data = szr.extract_data(smallest_file)
-                    end
-                    data
-                  },
 
         'gz::simplecompress' => proc { |data, _info: {}| SimpleCompress.expand(data) },
         'gz::zlibgzip' => proc { |data, _info: {}|
@@ -317,8 +258,6 @@ module Facter::Util::Bigbigpuppetfacts
         },
         'gz::zlib' => proc { |data, _info: {}| Zlib::Inflate.inflate(data) },
         'gz' => proc { |data, _info: {}| decompressmethods['gz::zlibgzip'].call(data) },
-
-        'xz' => proc { |data, _info: {}| XZ.decompress(data) },
 
        'base64' => proc { |data, _info: {}| Base64.decode64(data) },
        '^json' => proc { |data, _info: {}|
