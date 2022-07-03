@@ -1,4 +1,12 @@
 #!/opt/puppetlabs/puppet/bin/ruby -I ../../lib
+
+lib_path = File.join(File.dirname(__FILE__), '../../lib/')
+$LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
+
+# bbpfcodedir=$PWD/../../ ; dir -p /tmp/media ;  cd  /tmp/media ; cp -r $bbpfcodedir ./ ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
+lib_path = '/tmp/media/bigbigpuppetfacts/lib/'
+$LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
+
 require 'json'
 require 'facter/util/bigbigpuppetfacts'
 
@@ -8,9 +16,28 @@ require 'facter/util/bigbigpuppetfacts'
 ##### Test Setup
 class BBPFTester
   include Facter::Util::Bigbigpuppetfacter
+
+  def bbpf_supportmatrixtest()
+
+    methods_to_check = [ 'xz' , 'xz_base64' ]
+
+    methodshashs_to_check = methods_to_check.uniq.each_with_object({}) do |m, rethash|
+      hash_key = m.match?(%r{^[\^]}) ? "plain_#{m.gsub(%r{^[\^]}, '')}" : m
+
+      begin
+        use_compressmethod(m)
+        rethash[hash_key] = m == compressmethod_used ? 'Supported' : 'Not Supported'
+      rescue LoadError
+        rethash[hash_key] = 'Not Supported - Fatal Crash'
+      end
+    end
+  end
+
 end
 bb = BBPFTester.new
 
+
+bb.bbpf_supportmatrixtest
 
 # Use case 0 Current
 fallback_methods= 'plain'
