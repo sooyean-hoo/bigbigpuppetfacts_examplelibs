@@ -37,7 +37,7 @@ end
 bb = BBPFTester.new
 
 
-bb.bbpf_supportmatrixtest
+result=bb.bbpf_supportmatrixtest
 
 # Use case 0 Current
 fallback_methods= 'plain'
