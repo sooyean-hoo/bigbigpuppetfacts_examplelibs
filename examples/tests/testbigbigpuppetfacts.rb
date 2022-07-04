@@ -2,7 +2,7 @@
 
 ## Before running this test...
 ## Run the following preparation code first at the module root folder
-# bbpfcodedir=$PWD/../../ ; dir -p /tmp/media ;  cd  /tmp/media ; cp -r $bbpfcodedir ./ ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
+# bbpfcodedir=$PWD/../`basename $PWD ` ; mkdir -p /tmp/media ;  cd  /tmp/media ; rsync -avvphrz $bbpfcodedir ./ ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
 
 
 lib_path = File.join(File.dirname(__FILE__), '../../lib/')
