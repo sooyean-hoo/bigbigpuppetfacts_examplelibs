@@ -15,5 +15,5 @@
     <booleanAttribute key="org.eclipse.dltk.launching.debugConsole" value="true"/>
     <stringAttribute key="process_factory_id" value="org.eclipse.dltk.launching.scriptProcessFactory"/>
     <stringAttribute key="project" value="bigbigpuppetfacts"/>
-    <stringAttribute key="workingDir" value="${workspace_loc:scb_mssql_ura/examples/tests}"/>
+    <stringAttribute key="workingDir" value="${workspace_loc:bigbigpuppetfacts/examples/tests}"/>
 </launchConfiguration>
