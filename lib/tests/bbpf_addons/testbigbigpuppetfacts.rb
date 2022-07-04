@@ -25,7 +25,7 @@ class BBPFTester
     methods_to_check.uniq.each_with_object({}) do |m, rethash|
       hash_key = m.match?(%r{^[\^]}) ? "plain_#{m.gsub(%r{^[\^]}, '')}" : m
 
-      bbpf_drivers( [ File.join(File.dirname(__FILE__), '../../../lib/puppet_x/bigbigfacts/drivers/*.rb')  ])
+      bbpf_drivers([ File.join(File.dirname(__FILE__), '../../../lib/puppet_x/bigbigfacts/drivers/*.rb') ])
 
       begin
         use_compressmethod(m)

@@ -23,6 +23,6 @@ describe :bbpf_supportmatrix, type: :fact do
   end
 
   it 'returns a value' do
-    expect(fact.value).to include("support")
+    expect(fact.value).to include('support')
   end
 end
