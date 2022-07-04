@@ -3,7 +3,7 @@
     <stringAttribute key="bad_container_name" value="/bigbigpuppetfactsexamples/launchers"/>
     <stringAttribute key="dbgp_session_id" value="idekey"/>
     <stringAttribute key="dbpg_port" value="10000"/>
-    <intAttribute key="dbpg_waiting_timeout" value="30000"/>
+    <intAttribute key="dbpg_waiting_timeout" value="300000"/>
     <booleanAttribute key="enableBreakOnFirstLine" value="false"/>
     <booleanAttribute key="enableDbgpLogging" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
@@ -14,5 +14,5 @@
     </listAttribute>
     <stringAttribute key="project" value="bigbigpuppetfacts"/>
     <stringAttribute key="remoteWorkingDir" value="/Users/valente/Documents/@Work/SCB/codes/bigbigpuppetfacts"/>
-    <booleanAttribute key="stripSourceFolders" value="false"/>
+    <booleanAttribute key="stripSourceFolders" value="true"/>
 </launchConfiguration>

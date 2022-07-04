@@ -5,6 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug ./testbigbigpuppetfacts.rb",
+            "type": "Ruby",
+            "debuggerPort": "10000",
+            "request": "launch",
+            "program": "${workspaceFolder}/lib/tests/bbpf_addons/testbigbigpuppetfacts.rb",
+            "args": [
+                ""
+            ]
+        },
+        {
+            "type": "ruby-debug",
+            "request": "launch",
+            "name": "rDebug ./testbigbigpuppetfacts.rb",
+            "program": "${workspaceFolder}/lib/tests/bbpf_addons/testbigbigpuppetfacts.rb",
+            "programArgs": [
+                "testfact"
+            ],
+            "useBundler": false
+        },
+        {
             "name": "xzdemo",
             "type": "Ruby",
             "request": "launch",
