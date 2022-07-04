@@ -3,9 +3,9 @@
 ## Before running this test...
 ## Run the following preparation code first at the module root folder
 ## OLD bbpfcodedir=$PWD/../`basename $PWD ` ; mkdir -p /tmp/media ;  cd  /tmp/media ; rsync -avvphrz $bbpfcodedir ./ ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
-# bbpfcodedir=$PWD/../`basename $PWD ` ; mkdir -p /tmp/media ;  cd  /tmp/media ; git clone $bbpfcodedir ./ ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
+# bbpfcodedir=$PWD/../`basename $PWD ` ; mkdir -p /tmp/media ;  cd  /tmp/media ; git clone $bbpfcodedir    ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
 
-lib_path = File.join(File.dirname(__FILE__), '../../lib/')
+lib_path = File.join(File.dirname(__FILE__), '../../../lib/')
 $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
 lib_path = '/tmp/media/bigbigpuppetfacts/lib/'

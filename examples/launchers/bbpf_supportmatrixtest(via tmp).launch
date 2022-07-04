@@ -4,10 +4,10 @@
     <booleanAttribute key="enableBreakOnFirstLine" value="false"/>
     <booleanAttribute key="enableDbgpLogging" value="false"/>
     <stringAttribute key="interpreterArguments" value="-I ../../lib"/>
-    <stringAttribute key="mainScript" value="examples/tests/testbigbigpuppetfacts.rb"/>
+    <stringAttribute key="mainScript" value="lib/tests/bbpf_addons/testbigbigpuppetfacts.rb"/>
     <stringAttribute key="nature" value="org.eclipse.dltk.ruby.core.nature"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/bigbigpuppetfacts/examples/tests/testbigbigpuppetfacts.rb"/>
+        <listEntry value="/bigbigpuppetfacts/lib/tests/bbpf_addons/testbigbigpuppetfacts.rb"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
@@ -15,5 +15,5 @@
     <booleanAttribute key="org.eclipse.dltk.launching.debugConsole" value="true"/>
     <stringAttribute key="process_factory_id" value="org.eclipse.dltk.launching.scriptProcessFactory"/>
     <stringAttribute key="project" value="bigbigpuppetfacts"/>
-    <stringAttribute key="workingDir" value="${workspace_loc:bigbigpuppetfacts/examples/tests}"/>
+    <stringAttribute key="workingDir" value="${workspace_loc:bigbigpuppetfacts/lib/tests/bbpf_addons/tests}"/>
 </launchConfiguration>
