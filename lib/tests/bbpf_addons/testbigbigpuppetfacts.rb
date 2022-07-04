@@ -38,6 +38,7 @@ bb = BBPFTester.new
 
 result = bb.bbpf_supportmatrixtest
 puts JSON.pretty_generate(result)
+puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 
 # Use case 0 Current
 fallback_methods = 'plain'
