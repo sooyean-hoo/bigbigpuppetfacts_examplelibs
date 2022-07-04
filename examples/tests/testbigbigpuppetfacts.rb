@@ -1,9 +1,13 @@
 #!/opt/puppetlabs/puppet/bin/ruby -I ../../lib
 
+## Before running this test...
+## Run the following preparation code first at the module root folder
+# bbpfcodedir=$PWD/../../ ; dir -p /tmp/media ;  cd  /tmp/media ; cp -r $bbpfcodedir ./ ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
+
+
 lib_path = File.join(File.dirname(__FILE__), '../../lib/')
 $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
-# bbpfcodedir=$PWD/../../ ; dir -p /tmp/media ;  cd  /tmp/media ; cp -r $bbpfcodedir ./ ; cd `basename $bbpfcodedir ` ; git reset --hard ; git checkout 4publicversion ;
 lib_path = '/tmp/media/bigbigpuppetfacts/lib/'
 $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
