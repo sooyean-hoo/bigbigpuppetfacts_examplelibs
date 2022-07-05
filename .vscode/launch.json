@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Attach to rdebug-ide",
+            "type": "Ruby",
+            "request": "attach",
+            "remoteHost": "127.0.0.1",
+            "remotePort": "10000",
+            "remoteWorkspaceRoot": "${workspaceRoot}"
+        },
+        {
             "name": "RSpec - active spec file only",
             "type": "Ruby",
             "request": "launch",
@@ -34,12 +42,6 @@
                 "testfact"
             ],
             "useBundler": false
-        },
-        {
-            "name": "xzdemo",
-            "type": "Ruby",
-            "request": "launch",
-            "program": "${workspaceRoot}/xz.rb"
         }
     ]
 }
