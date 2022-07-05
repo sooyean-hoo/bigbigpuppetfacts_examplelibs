@@ -14,6 +14,9 @@ require 'spec_helper'
 require 'facter'
 require 'facter/bbpf_supportmatrix'
 
+#driverspaths=[ File.join(File.dirname(__FILE__), '../../../lib/puppet_x/bigbigfacts/drivers/*.rb') ]
+#Facter::Util::Bigbigpuppetfacts.drivers(driverspaths )
+
 describe :bbpf_supportmatrix, type: :fact do
   subject(:fact) { Facter.fact(:bbpf_supportmatrix) }
 
@@ -23,6 +26,10 @@ describe :bbpf_supportmatrix, type: :fact do
   end
 
   it 'returns a value' do
-    expect(fact.value).to include('support')
+    #expect(fact.value).to include('"xz_base64" => "Supported"')
+    #expect(fact.value).to include( {"xz" => "Supported"})
+    #expect(fact.value).to include( {"bz2" => "Supported"})
+    expect(fact.value).to include( {"base64" => "Supported"})
+    expect(fact.value).to include( {"gz" => "Supported"})
   end
 end

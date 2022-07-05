@@ -35,6 +35,38 @@ class BBPFTester
       end
     end
   end
+
+  def bbpf_supportmatrix_factertest
+    use_compressmethod_fallback 'plain'
+    methods_to_check = 'gz_base64,bz2_base64,xz_base64,plain,7z_base74,lzma_base64'
+    methods_to_check = methods_to_check.split(',')
+
+    # Add in all methods solo...
+    bbpfm = Facter::Util::Bigbigpuppetfacts.compressmethods.keys
+    methods_to_check += bbpfm - ['^nil::'] ## Remove  ^nil
+    methods_to_check = methods_to_check.reject { |x| %r{^::}.match? x } ## Remove  All the internal methods...
+    methods_to_check = methods_to_check.reject { |x| %r{::shellout}.match? x } ## Remove  All the shellout methods...
+    methods_to_check = methods_to_check.reject { |x| %r{simulate}.match? x } ## Remove  All the simulate methods...
+    methods_to_check = methods_to_check.reject { |x| %r{bbpf}.match? x } ## Remove  All the bbpf methods...
+    methods_to_check = methods_to_check.reject { |x| %r{dataurl}.match? x } ## Remove  All the bbpf methods...
+    methods_to_check = methods_to_check.reject { |x| %r{bash}.match? x } ## Remove  All the bash methods...
+    # methods_to_check +=   bbpfm.select { |x| %r{::shellout}.match?(x) && %r{7z::}.match?(x) } ## Add All the 7z shellout...
+
+    # methods_to_check = methods_to_check.map{ |y|   y.match?(/^[\^]/) ? "plain_#{y.gsub(/^[\^]/,'') }" : y }
+
+    methodshashs_to_check = methods_to_check.uniq.each_with_object({}) do |m, rethash|
+      hash_key = m.match?(%r{^[\^]}) ? "plain_#{m.gsub(%r{^[\^]}, '')}" : m
+
+      begin
+        use_compressmethod(m)
+        rethash[hash_key] = m == compressmethod_used ? 'Supported' : 'Not Supported'
+      rescue LoadError
+        rethash[hash_key] = 'Not Supported - Fatal Crash'
+      end
+    end
+
+    methodshashs_to_check
+  end
 end
 bb = BBPFTester.new
 
@@ -97,18 +129,6 @@ puts "==bb.compressmethod_used=#{bb.compressmethod_used}="
 puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 
 # Use case 6
-bb.use_compressmethod_fallback fallback_methods
-methods_to_check = 'gz_base64,bz2_base64,xz_base64,plain,7z_base74,lzma_base64'
-methods_to_check = methods_to_check.split(',')
-
-# methodshashs_to_check=methods_to_check.reduce({}){  | rethash, m|
-#   rethash[methods_to_check[0]]=methods_to_check
-#   methods_to_check=methods_to_check.rotate
-#   rethash
-# }
-methodshashs_to_check = methods_to_check.each_with_object({}) do |m, rethash|
-  bb.use_compressmethod(m)
-  rethash[m] = m == bb.compressmethod_used ? 'Supported' : 'Not Supported'
-end
+methodshashs_to_check = bb.bbpf_supportmatrix_factertest
 
 puts JSON.pretty_generate(methodshashs_to_check)
