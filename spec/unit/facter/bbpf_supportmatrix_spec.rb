@@ -27,6 +27,8 @@ describe :bbpf_supportmatrix, type: :fact do
   end
 
   it 'returns a value' do
+    expect(fact.value).to include({ 'qr' => 'Supported' })
+    expect(fact.value).to include({ 'barcode' => 'Supported' })
     expect(fact.value).to include({ 'base64' => 'Supported' })
     expect(fact.value).to include({ 'gz' => 'Supported' })
   end
