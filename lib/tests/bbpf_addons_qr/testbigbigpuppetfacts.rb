@@ -87,8 +87,8 @@ puts "==fallback_methods=#{fallback_methods}=\n=method2set=#{method2set}="
 bb.use_compressmethod_fallback fallback_methods
 #bb.use_compressmethod('^json_' + method2set)
 bb.use_compressmethod( method2set)
-puts bb.compress('http://www.yahoo.com')
 puts "==bb.compressmethod_used=#{bb.compressmethod_used}="
+puts bb.compress('http://www.yahoo.com')
 puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 
 # Use case 1
@@ -99,9 +99,10 @@ bb.use_compressmethod_fallback fallback_methods
 #bb.use_compressmethod('^json_' + method2set)
 bb.use_compressmethod( method2set)
 puts "==bb.compressmethod_used=#{bb.compressmethod_used}="
+puts bb.compress('0000')
 puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 
-# Use case 2
+# Use case 2\
 methodshashs_to_check = bb.bbpf_supportmatrix_factertest
 
 puts JSON.pretty_generate(methodshashs_to_check)
