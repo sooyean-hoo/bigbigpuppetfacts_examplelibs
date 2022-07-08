@@ -8,7 +8,7 @@ class BBPFDrivers::QR
     {
       'qr' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
         qr = RQRCode::QRCode.new(data)
-        qr.to_s( dark: "█", light: " " )
+        qr.to_s( dark: "0", light: " " )
       }
     }
   end

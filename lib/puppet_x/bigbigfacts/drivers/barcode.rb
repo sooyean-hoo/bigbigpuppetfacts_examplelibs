@@ -8,8 +8,6 @@ class BBPFDrivers::BARCODE
     {
       'barcode' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
         barcode = Barby::Code39.new(data,true)
-        #barcode.to_ascii({:bar =>"█",:space=>' ',:height => 1})
-        #barcode.to_ascii({:bar =>"|",:space=>' ',:height => 3})
         barcode.to_ascii
       }
     }
