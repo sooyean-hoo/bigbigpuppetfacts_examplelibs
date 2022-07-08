@@ -19,7 +19,6 @@ class BBPFTester
   include Facter::Util::Bigbigpuppetfacter
 
   def bbpf_supportmatrixtest
-
     bbpf_drivers([ File.join(File.dirname(__FILE__), '../../../lib/puppet_x/bigbigfacts/drivers/*.rb') ])
 
     methods_to_check = [ 'qr', 'barcode' ]
@@ -85,8 +84,8 @@ fallback_methods = 'plain'
 method2set = 'qr'
 puts "==fallback_methods=#{fallback_methods}=\n=method2set=#{method2set}="
 bb.use_compressmethod_fallback fallback_methods
-#bb.use_compressmethod('^json_' + method2set)
-bb.use_compressmethod( method2set)
+# bb.use_compressmethod('^json_' + method2set)
+bb.use_compressmethod(method2set)
 puts "==bb.compressmethod_used=#{bb.compressmethod_used}="
 puts bb.compress('http://www.yahoo.com')
 puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
@@ -96,8 +95,8 @@ fallback_methods = 'plain'
 method2set = 'barcode'
 puts "==fallback_methods=#{fallback_methods}=\n=method2set=#{method2set}="
 bb.use_compressmethod_fallback fallback_methods
-#bb.use_compressmethod('^json_' + method2set)
-bb.use_compressmethod( method2set)
+# bb.use_compressmethod('^json_' + method2set)
+bb.use_compressmethod(method2set)
 puts "==bb.compressmethod_used=#{bb.compressmethod_used}="
 puts bb.compress('0000')
 puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
