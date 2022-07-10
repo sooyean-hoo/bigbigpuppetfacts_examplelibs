@@ -7,6 +7,9 @@ class BBPFDrivers::Z7Z
   def compressmethods
     {
       # 7z, zip, gzip, bzip2 or tar. 7z xz
+      '7z::xz::shellout2' => proc { |data, _info: {}|
+                               compressmethods['::shellout2'].call(data, '7za -txz -an    -so     a  <TMPFILE>.tmp <TMPFILE> ', 'tee')
+                             },
       '7z::xz::shellout' => proc { |data, _info: {}|
                               compressmethods['::shellout'].call(data, '7za -txz -an -si -so     a', 'tee')
                             },
@@ -35,6 +38,9 @@ class BBPFDrivers::Z7Z
 
   def decompressmethods
     {
+      '7z::xz::shellout2' => proc { |data, _info: {}|
+                              compressmethods['::shellout2'].call(data, '7za -txz -an -si -so     x <TMPFILE>', 'tee')
+                            },
       '7z::xz::shellout' => proc { |data, _info: {}|
                               compressmethods['::shellout'].call(data, '7za -txz -an -si -so     x', 'tee')
                             },
