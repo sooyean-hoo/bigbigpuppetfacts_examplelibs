@@ -1,29 +1,49 @@
 require_relative '../bbpfdrivers.rb'
-
+require 'erb'
 # Drivers to Load the Z7Z method
 class BBPFDrivers::Z7Z
   def initialise; end
 
   def compressmethods
+    erbtemplate_shellout2 = ['7za -t<%=ext%> a  <TMPFILE>.<%=ext%> <TMPDIR>/data.dat ', '<TMPFILE>.<%=ext%>']
+
     {
       # 7z, zip, gzip, bzip2 or tar. 7z xz
       '7z::xz::shellout2' => proc { |data, _info: {}|
-                               compressmethods['::shellout2'].call(data, '7za -txz -an    -so     a  <TMPFILE>.tmp <TMPFILE> ', 'tee')
+                               ext = 'xz'
+                               Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0])).result(binding),
+  (ERB.new(erbtemplate_shellout2[1])).result(binding))
                              },
+                             '7z::gzip::shellout2' => proc { |data, _info: {}|
+                                                        ext = 'gzip'
+                                                        Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0])).result(binding),
+                           (ERB.new(erbtemplate_shellout2[1])).result(binding))
+                                                      },
+                           '7z::bzip2::shellout2' => proc { |data, _info: {}|
+                                                       ext = 'bzip2'
+                                                       Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0])).result(binding),
+                           (ERB.new(erbtemplate_shellout2[1])).result(binding))
+                                                     },
+                          '7z::zip::shellout2' => proc { |data, _info: {}|
+                                                    ext = 'zip'
+                                                    Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0])).result(binding),
+                          (ERB.new(erbtemplate_shellout2[1])).result(binding))
+                                                  },
+
       '7z::xz::shellout' => proc { |data, _info: {}|
-                              compressmethods['::shellout'].call(data, '7za -txz -an -si -so     a', 'tee')
+                              Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -txz        a', 'tee')
                             },
       '7z::gzip::shellout' => proc { |data, _info: {}|
-                                compressmethods['::shellout'].call(data, '7za -tgzip -an -si -so     a', 'tee')
+                                Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tgzip         a', 'tee')
                               },
       '7z::bzip2::shellout' => proc { |data, _info: {}|
-                                 compressmethods['::shellout'].call(data, '7za -tbzip2 -an -si -so     a', 'tee')
+                                 Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tbzip2         a', 'tee')
                                },
       '7z::zip::shellout' => proc { |data, _info: {}|
-                               compressmethods['::shellout'].call(data, '7za -tzip -an -si -so     a', 'tee')
+                               Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tzip         a', 'tee')
                              },
       '7z::shellout' => proc { |data, _info: {}|
-                          compressmethods['::shellout'].call(data, '7za -txz -an -si -so     a', 'tee')
+                          Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -txz       a', 'tee')
                         },
       '7z::' => proc { |data, _info: {}|
                   dfile = StringIO.new('')
@@ -37,24 +57,46 @@ class BBPFDrivers::Z7Z
   end
 
   def decompressmethods
+    erbtemplate_shellout2 = [
+      ['7za -t<%=ext%>        x <TMPDIR>/data.dat -o<TMPDIR2>', '<TMPDIR2>/data'],
+      ['7za -t<%=ext%>        x <TMPDIR>/data.dat -o<TMPDIR2>', '<TMPDIR2>/data.dat'],
+    ]
     {
       '7z::xz::shellout2' => proc { |data, _info: {}|
-                              compressmethods['::shellout2'].call(data, '7za -txz -an -si -so     x <TMPFILE>', 'tee')
-                            },
+                               ext = 'xz'
+                               Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0][0])).result(binding),
+(ERB.new(erbtemplate_shellout2[0][1])).result(binding))
+                             },
+      '7z::gzip::shellout2' => proc { |data, _info: {}|
+                                 ext = 'gzip'
+                                 Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[1][0])).result(binding),
+(ERB.new(erbtemplate_shellout2[1][1])).result(binding))
+                               },
+                               '7z::bzip2::shellout2' => proc { |data, _info: {}|
+                                                           ext = 'bzip2'
+                                                           Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0][0])).result(binding),
+                               (ERB.new(erbtemplate_shellout2[0][1])).result(binding))
+                                                         },
+                          '7z::zip::shellout2' => proc { |data, _info: {}|
+                                                    ext = 'zip'
+                                                    Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[1][0])).result(binding),
+                          (ERB.new(erbtemplate_shellout2[1][1])).result(binding))
+                                                  },
+
       '7z::xz::shellout' => proc { |data, _info: {}|
-                              compressmethods['::shellout'].call(data, '7za -txz -an -si -so     x', 'tee')
+                              Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -txz        x', 'tee')
                             },
       '7z::gzip::shellout' => proc { |data, _info: {}|
-                                compressmethods['::shellout'].call(data, '7za -tgzip -an -si -so     x', 'tee')
+                                Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tgzip        x', 'tee')
                               },
       '7z::bzip2::shellout' => proc { |data, _info: {}|
-                                 compressmethods['::shellout'].call(data, '7za -tbzip2 -an -si -so     x', 'tee')
+                                 Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tbzip2         x', 'tee')
                                },
       '7z::zip::shellout' => proc { |data, _info: {}|
-                               compressmethods['::shellout'].call(data, '7za -tzip -an -si -so     x', 'tee')
+                               Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tzip        x', 'tee')
                              },
       '7z::shellout' => proc { |data, _info: {}|
-                          compressmethods['::shellout'].call(data, '7za -txz -an -si -so     x', 'tee')
+                          Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -txz        x', 'tee')
                         },
       '7z::' => proc { |data, _info: {}|
                   dfile = StringIO.new(data)
@@ -68,6 +110,7 @@ class BBPFDrivers::Z7Z
     }
   end
 
+  # rubocop:enable Style/ClassAndModuleChildren
   def test_methods
     {
       # Empty, so use the default one.

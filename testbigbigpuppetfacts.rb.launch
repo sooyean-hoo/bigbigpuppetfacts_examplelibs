@@ -11,6 +11,10 @@
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
     </listAttribute>
+    <mapAttribute key="org.eclipse.debug.core.environmentVariables">
+        <mapEntry key="PATH" value="/usr/local/sbin:/Users/valente/bin/:/usr/local/bin/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/usr/local/munki:/opt/puppetlabs/pdk/bin:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands"/>
+    </mapAttribute>
+    <stringAttribute key="org.eclipse.dltk.launching.INTERPRETER_CONTAINER" value="org.eclipse.dltk.launching.INTERPRETER_CONTAINER/org.eclipse.dltk.internal.debug.ui.launcher.GenericRubyInstallType/ruby(puppet)"/>
     <booleanAttribute key="org.eclipse.dltk.launching.debugConsole" value="true"/>
     <stringAttribute key="process_factory_id" value="org.eclipse.dltk.launching.scriptProcessFactory"/>
     <stringAttribute key="project" value="bigbigpuppetfacts"/>

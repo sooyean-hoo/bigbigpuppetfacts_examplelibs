@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.dltk.ruby.launching.RubyLaunchConfigurationType">
+    <stringAttribute key="bad_container_name" value="/bigbigpuppetfacts/examples/launchers"/>
+    <booleanAttribute key="enableBreakOnFirstLine" value="false"/>
+    <booleanAttribute key="enableDbgpLogging" value="false"/>
+    <stringAttribute key="interpreterArguments" value="-I ../../lib -I /opt/puppetlabs/puppet/cache/lib"/>
+    <stringAttribute key="mainScript" value="examples/deps/bigbigpuppetfacts_/lib/puppet_x/bigbigfacts/xzpuppetutils.rb"/>
+    <stringAttribute key="nature" value="org.eclipse.dltk.ruby.core.nature"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/bigbigpuppetfacts/examples/deps/bigbigpuppetfacts_/lib/puppet_x/bigbigfacts/xzpuppetutils.rb"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <mapAttribute key="org.eclipse.debug.core.environmentVariables">
+        <mapEntry key="CLIDIR" value="${project_loc}"/>
+    </mapAttribute>
+    <stringAttribute key="org.eclipse.dltk.launching.INTERPRETER_CONTAINER" value="org.eclipse.dltk.launching.INTERPRETER_CONTAINER/org.eclipse.dltk.internal.debug.ui.launcher.GenericRubyInstallType/ruby(rbenv)"/>
+    <booleanAttribute key="org.eclipse.dltk.launching.debugConsole" value="true"/>
+    <stringAttribute key="process_factory_id" value="org.eclipse.dltk.launching.scriptProcessFactory"/>
+    <stringAttribute key="project" value="bigbigpuppetfacts"/>
+    <stringAttribute key="scriptArguments" value="IN ./Gemfile OUT - decompress_7z::xz::shellout2_base64"/>
+    <stringAttribute key="workingDir" value="${workspace_loc:bigbigpuppetfacts/examples/deps/bigbigpuppetfacts_/}"/>
+</launchConfiguration>
