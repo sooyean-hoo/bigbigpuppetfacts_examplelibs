@@ -64,39 +64,39 @@ class BBPFDrivers::Z7Z
     {
       '7z::xz::shellout2' => proc { |data, _info: {}|
                                ext = 'xz'
-                               Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0][0])).result(binding),
+                               Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0][0])).result(binding),
 (ERB.new(erbtemplate_shellout2[0][1])).result(binding))
                              },
       '7z::gzip::shellout2' => proc { |data, _info: {}|
                                  ext = 'gzip'
-                                 Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[1][0])).result(binding),
+                                 Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[1][0])).result(binding),
 (ERB.new(erbtemplate_shellout2[1][1])).result(binding))
                                },
                                '7z::bzip2::shellout2' => proc { |data, _info: {}|
                                                            ext = 'bzip2'
-                                                           Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0][0])).result(binding),
+                                                           Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[0][0])).result(binding),
                                (ERB.new(erbtemplate_shellout2[0][1])).result(binding))
                                                          },
                           '7z::zip::shellout2' => proc { |data, _info: {}|
                                                     ext = 'zip'
-                                                    Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[1][0])).result(binding),
+                                                    Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, (ERB.new(erbtemplate_shellout2[1][0])).result(binding),
                           (ERB.new(erbtemplate_shellout2[1][1])).result(binding))
                                                   },
 
       '7z::xz::shellout' => proc { |data, _info: {}|
-                              Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -txz        x', 'tee')
+                              Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout'].call(data, '7za -txz        x', 'tee')
                             },
       '7z::gzip::shellout' => proc { |data, _info: {}|
-                                Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tgzip        x', 'tee')
+                                Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout'].call(data, '7za -tgzip        x', 'tee')
                               },
       '7z::bzip2::shellout' => proc { |data, _info: {}|
-                                 Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tbzip2         x', 'tee')
+                                 Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout'].call(data, '7za -tbzip2         x', 'tee')
                                },
       '7z::zip::shellout' => proc { |data, _info: {}|
-                               Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -tzip        x', 'tee')
+                               Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout'].call(data, '7za -tzip        x', 'tee')
                              },
       '7z::shellout' => proc { |data, _info: {}|
-                          Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout'].call(data, '7za -txz        x', 'tee')
+                          Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout'].call(data, '7za -txz        x', 'tee')
                         },
       '7z::' => proc { |data, _info: {}|
                   dfile = StringIO.new(data)
