@@ -20,6 +20,9 @@ help::
 	fi;
 	echo We are at `pwd`
 
+ifeq ( ${HOME}/mym/valentepuppet/Makefile, ${shell ls -1 ${HOME}/mym/valentepuppet/Makefile })
+	include ${HOME}/mym/valentepuppet/Makefile
+endif
 
 vendordir:=./lib/vendor
 
