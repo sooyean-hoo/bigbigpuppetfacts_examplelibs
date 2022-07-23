@@ -1,228 +1,294 @@
+
 # bigbigpuppetfacts
 
-
-## How to Update the compression/decompression libraries
-The followings steps are for Updating the Libraries with new Compressor/Decompressor.
-  However, there is a need to update the version of the library. The first 2 steps
-    would suffices. There is no need to do any code changes, unless new Gem needs it.
-
-- Edit the Gemfile.mylib
-
-> Add in the gem specification, just like a normal Gemfile. You can get the string
-from Gem.org. E.g. for 7z it is "gem 'seven_zip_ruby', '~> 1.2', '>= 1.2.4'"
-
-- Run   rake -f ./Rakefile.local make buildfacterutils    or make buildfacterutils
-
->
-```
-Running.....   make buildfacterutils
-rm -fr ./lib/vendor
-[ -e ./Gemfile.mylib ] && [ -e ./Gemfile ] && cp -f  ./Gemfile  ./Gemfile.makemake15639 && cp -f ./Gemfile.mylib ./Gemfile
-/opt/puppetlabs/puppet/bin/bundle install --path ./lib/vendor/bundle ;
-[DEPRECATED] The `--path` flag is deprecated because it relies on being remembered across bundler invocations, which bundler will no longer do in future versions. Instead please use `bundle config set --local path './lib/vendor/bundle'`, and stop using this flag
-Fetching gem metadata from https://rubygems.org/...
-Using bundler 2.2.29
-Fetching ruby-xz 1.0.0
-Fetching seven_zip_ruby 1.3.0
-Fetching rbzip2 0.3.0
-Installing ruby-xz 1.0.0
-Installing rbzip2 0.3.0
-Installing seven_zip_ruby 1.3.0 with native extensions
-Bundle complete! 3 Gemfile dependencies, 4 gems now installed.
-Bundled gems are installed into `./lib/vendor/bundle`
-Post-install message from ruby-xz:
-Version 1.0.0 of ruby-xz breaks the API. Read HISTORY.rdoc and adapt your code to the new API.
-/opt/puppetlabs/puppet/bin/bundle config set path ' ./lib/vendor/bundle' && /opt/puppetlabs/puppet/bin/bundle install
-Your application has set path to "./lib/vendor/bundle". This will override the global value you are currently setting
-Using bundler 2.2.29
-Using rbzip2 0.3.0
-Using ruby-xz 1.0.0
-Using seven_zip_ruby 1.3.0
-Bundle complete! 3 Gemfile dependencies, 4 gems now installed.
-Bundled gems are installed into `./lib/vendor/bundle`
-[ -e ./Gemfile.makemake15639 ]  && rm  -f  ./Gemfile  && mv  ./Gemfile.makemake15639  ./Gemfile
-echo cleanbundle it.
-cleanbundle it.
-orgDir=$PWD; \
-	find  ./  -iname 'lib' | grep gems | grep vendor | while read lib  ; do  \
-		pushd $PWD ;   \
-			  lib2move=`echo $lib |   sed -E 's/.+gems\///g'| sed -E 's/lib.+$/lib/g'        ` ;              \
-			cd  ./lib/facter/util ; \
-		      mkdir -p $lib2move ; \
-		      echo "==============================cp -r $orgDir/$lib  $lib2move/../   "; \
-			  cp -r $orgDir/$lib  $lib2move/../    ; \
-		popd 	;	 \
-	done ;
-~/Documents/codes/bigbigpuppetfacts ~/Documents/codes/bigbigpuppetfacts
-==============================cp -r /Users/valente/Documents/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/seven_zip_ruby-1.3.0/lib  seven_zip_ruby-1.3.0/lib/../
-~/Documents/codes/bigbigpuppetfacts
-~/Documents/codes/bigbigpuppetfacts ~/Documents/codes/bigbigpuppetfacts
-==============================cp -r /Users/valente/Documents/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/rbzip2-0.3.0/lib  rbzip2-0.3.0/lib/../
-~/Documents/codes/bigbigpuppetfacts
-~/Documents/codes/bigbigpuppetfacts ~/Documents/codes/bigbigpuppetfacts
-==============================cp -r /Users/valente/Documents/codes/bigbigpuppetfacts/.//lib/vendor/bundle/ruby/2.5.0/gems/ruby-xz-1.0.0/lib  ruby-xz-1.0.0/lib/../
-~/Documents/codes/bigbigpuppetfacts
-Cleaning Dependency
-Getting the Dependencies, Based on Gemfile
-[DEPRECATED] The `--path` flag is deprecated because it relies on being remembered across bundler invocations, which bundler will no longer do in future versions. Instead please use `bundle config set path './lib/vendor/bundle'`, and stop using this flag
-Warning: the running version of Bundler (2.1.4) is older than the version that created the lockfile (2.2.29). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.2.29`.
-The dependency puppet-module-win-default-r2.6 (~> 1.0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mswin32, x86-mingw32, x64-mingw32. To add those platforms to the bundle, run `bundle lock --add-platform x86-mswin32 x86-mingw32 x64-mingw32`.
-The dependency puppet-module-win-dev-r2.6 (~> 1.0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mswin32, x86-mingw32, x64-mingw32. To add those platforms to the bundle, run `bundle lock --add-platform x86-mswin32 x86-mingw32 x64-mingw32`.
-The dependency puppet-module-win-system-r2.6 (~> 1.0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mswin32, x86-mingw32, x64-mingw32. To add those platforms to the bundle, run `bundle lock --add-platform x86-mswin32 x86-mingw32 x64-mingw32`.
-Unable to use the platform-specific (universal-darwin) version of puppet (7.12.0) because it has different dependencies from the ruby version. To use the platform-specific version of the gem, run `bundle config set specific_platform true` and install again.
-Warning: the running version of Bundler (2.1.4) is older than the version that created the lockfile (2.2.29). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.2.29`.
-The dependency puppet-module-win-default-r2.6 (~> 1.0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mswin32, x86-mingw32, x64-mingw32. To add those platforms to the bundle, run `bundle lock --add-platform x86-mswin32 x86-mingw32 x64-mingw32`.
-The dependency puppet-module-win-dev-r2.6 (~> 1.0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mswin32, x86-mingw32, x64-mingw32. To add those platforms to the bundle, run `bundle lock --add-platform x86-mswin32 x86-mingw32 x64-mingw32`.
-The dependency puppet-module-win-system-r2.6 (~> 1.0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mswin32, x86-mingw32, x64-mingw32. To add those platforms to the bundle, run `bundle lock --add-platform x86-mswin32 x86-mingw32 x64-mingw32`.
-You can run the utilty using xzpuppetutils.sh now.
-```
-
-- Next you need to update the autoload_declare method in the lib/facter/util/bigbigpuppetfacts.rb
-with the new library. This is usually based on the main ruby to include. It is base directory which
-  house that ruby file. For 7z, it is "./seven_zip_ruby-1.3.0/lib"
-
-- In same function, you would need to do the normal integration of using the autoload
-function. You need specify the Constant which is associated with the library, usually
-it is the module name or the class name. For 7z. it is the module name, 'SevenZipRuby'.
-It is paired with the filename of the main ruby file. This give us the following code.
-
-```
-autoload :SevenZipRuby, 'seven_zip_ruby'
-```
-
-- The rest are more of how do you want to use the library.
-You will be adding procs to the methods which return an hash of procs. You can look
-   at the existing elements and do necessary adjustment.
-
->
-1. compressmethods
-2. decompressmethods
-
-** There is a few hidden conventions in the naming of the keys to the hash.
-
->
-	- ^ denotes that the compression proc is used from change the data from a certain format, from
-	a source which is non-String, while the decompression is vice-versa.
-	E.g. ^json
-	- :: Sub component of a compressor/decompress. Some compressor and handle multi-formats,
-	this is done, so that the user can specify which subcompoents to use. Bzip2 is best
-	example for this.
+Provide engine to ease the processing, encoding and compressing of facts. It comes
+with functions to compress and encoding facts, which are long-running/expensive and
+yet too big to store in puppetdb.
 
 
+#### Table of Contents
 
-
-Welcome to your new module. A short overview of the generated parts can be found
-in the [PDK documentation][1].
-
-The README template below provides a starting point with details about what
-information to include in your README.
-
-## Table of Contents
-
-1. [Description](#description)
-1. [Setup - The basics of getting started with bigbigpuppetfacts](#setup)
-    * [What bigbigpuppetfacts affects](#what-bigbigpuppetfacts-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with bigbigpuppetfacts](#beginning-with-bigbigpuppetfacts)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
+- [bigbigpuppetfacts](#bigbigpuppetfacts)
+      - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Usage](#usage)
+    - [Regular Facts](#regular-facts)
+    - [Aggregate Facts](#aggregate-facts)
+    - [Puppet Functions, used in Puppet Manifest](#puppet-functions-used-in-puppet-manifest)
+  - [Reference](#reference)
+    - [`use_compressmethod_fallback(:fallback_method)` *Optional*](#use_compressmethod_fallbackfallback_method-optional)
+    - [`use_compressmethod(:method)`](#use_compressmethodmethod)
+    - [`compress(:data)`](#compressdata)
+  - [Puppet Functions](#puppet-functions)
+    - [`bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)`](#bbpf_fndata-use_runmethod-use_runmethodtype-bigbigpuppetfacts)
+  - [Compress/Process Methods](#compressprocess-methods)
+    - [Supporting Custom Facts](#supporting-custom-facts)
+  - [Development](#development)
 
 ## Description
 
-Briefly tell users why they might want to use your module. Explain what your
-module does and what kind of problems users can solve with it.
+This creates a framework for add-on processing of facts. There are various processings
+can be extended by add new modules namely module named bigbigpuppetfacts_*
 
-This should be a fairly short description helps the user decide if your module
-is what they want.
+This started as a framework to allow for puppet facts to compress into base64 encoding: there is
+compression before the encoding. This is to address the concerns of having huge facts
+of size > 30MB. This function is still part of the module. It is broken unto 2 parts:
 
-## Setup
+* Methods using the puppet built-in ruby gems/libraries and included by this module.
+  * gz: gzip
+  * base64: base64 encoding
+  * ^json: json encoding
+  * ^yaml: yaml encoding
+  * plain: There is no encoding, just a passthrough.
+  * bbpf: Internal encoding, where the compression method is encoded as part of the encoding.
+  * dataurl: Internal encoding, leveraging on other encoding/compression (esp base64) to have a
+result which you put as a data-url.
+  * bash: Internal encoding, leveraging on other encoding/compression (esp base64) to have self-extracting
+bash script.
 
-### What bigbigpuppetfacts affects **OPTIONAL**
+* Methods needs extra ruby gems/libraries, usually as another dependent puppet modules
+  * xz - Packagedin bigbigpuppetfacts_examplelibs module
+  * bz2 - Packaged in bigbigpuppetfacts_examplelibs module
+  * 7z - Packaged in bigbigpuppetfacts_examplelibs module
+  * qr - Packaged in bigbigpuppetfacts_qrcode module
+  * cowsay - Packaged in bigbigpuppetfacts_command module
 
-If it's obvious what your module touches, you can skip this section. For
-example, folks can probably figure out that your mysql_instance module affects
-their MySQL instances.
+Here is a family tree of dependency modules.
+_**Note for developers of the new dependent modules, feel free to update this tree._
 
-If there's more that they should know about, though, this is the place to
-mention:
-
-* Files, packages, services, or operations that the module will alter, impact,
-  or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-another module, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you might want to include an additional "Upgrading" section here.
-
-### Beginning with bigbigpuppetfacts
-
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most basic
-use of the module.
+```mermaid
+  graph TD;
+      bigbigpuppetfacts_examplelibs--depends-->bigbigpuppetfacts;
+      bigbigpuppetfacts_qrcode--depends-->bigbigpuppetfacts;
+      bigbigpuppetfacts_command--depends-->bigbigpuppetfacts;
+```
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your
-users how to use your module to solve problems, and be sure to include code
-examples. Include three to five examples of the most important or common tasks a
-user can accomplish with your module. Show users how to accomplish more complex
-tasks that involve different types, classes, and functions working in tandem.
+### Regular Facts
+
+```ruby
+require 'facter/util/bigbigpuppetfacts'
+
+Facter.add(:verybigfact) do
+  use_compressmethod_fallback 'plain'
+  use_compressmethod 'xz_base64'
+
+  setcode do
+    compress('This is an expensive value')
+  end
+end
+
+## This tries to work on the String 'This is an expensive value'. It compresses the
+## data using 'gzip' method, then followed up with 'base64'. The result of this operation
+## is then set as the value of the fact with the name 'verybigfact'.
+##
+## In the event of failure during the pre-check when the 'use_compressmethod' is called
+## to set the desired compress method, the fallback method, plain, will be used instead.
+##
+##
+
+
+```
+
+### Aggregate Facts
+
+```ruby
+require 'facter/util/bigbigpuppetfacts'
+
+Facter.add(:aggregate_verybigfact, :type => :aggregate) do
+  use_compressmethod_fallback 'plain'
+  use_compressmethod 'gz_base64'
+
+  chunk(:ex1) do
+    interfaces = {}
+    interfaces[:ex1]=compress('This is an expensive value,1 compressed by gzip, then
+    encoded by base64')
+    interfaces
+  end
+
+  chunk(:ex2) do
+    interfaces = {}
+    interfaces[:ex2]=compress('This is an expensive value2, compressed by gzip, then
+    encoded by base64 ')
+    interfaces
+  end
+
+  use_compressmethod 'plain'
+
+  chunk(:ex1_plain) do
+    interfaces = {}
+    interfaces[:ex1_plain]=compress('This is an expensive value2, uncompressed and
+    in plain')
+    interfaces
+  end
+
+end
+
+
+```
+### Puppet Functions, used in Puppet Manifest
+
+   - As part of the Puppet Manifest:
+   ```bash
+      bbpf_fn('aaaaaa', 'base64') => 'YWFhYWFh'
+      bbpf_fn('aaaaaa', 'base64') => 'aaaaaa'
+      'aaaaaa'.bbpf_fn('base64') => 'YWFhYWFh'
+      '0000'.bbpf_fn('base64').bbpf_fn('base64','reverse') => '0000' # This encodes, then decodes by base644
+      '0000'.bbpf_fn('gz_base64') => 'H4sIAGY52GIAAzMwMDAAAHLEmwwEAAAA'
+      '0000'.bbpf_fn('gz_base64').bbpf_fn('gz_base64','reverse') => '0000'
+      'bbbb'.bbpf_fn('plain')  => 'bbbb'
+  ```
+  - At bash prompt:
+  ```bash
+      sudo -E /opt/puppetlabs/bin/puppet apply -e "notice( 'aaaaaa'.bbpf_fn('base64'))"  --modulepath=`sudo /opt/puppetlabs/bin/puppet config print vardir`/../
+      sudo -E /opt/puppetlabs/bin/puppet apply -e "notice( 'aaaaa'.bbpf_fn('base64').bbpf_fn('base64','reverse'))"  --modulepath=`sudo /opt/puppetlabs/bin/puppet config print vardir`/../
+      sudo -E /opt/puppetlabs/bin/puppet apply -e "notice( bbpf_fn('aaaaaa', 'base64'))"  --modulepath=`sudo /opt/puppetlabs/bin/puppet config print vardir`/../
+      sudo -E /opt/puppetlabs/bin/puppet apply -e "notify{ bbpf_fn('aaaaaa', 'base64'):}"  --modulepath=`sudo /opt/puppetlabs/bin/puppet config print vardir`/../
+  ```
+
 
 ## Reference
 
-This section is deprecated. Instead, add reference information to your code as
-Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your
-module. For details on how to add code comments and generate documentation with
-Strings, see the [Puppet Strings documentation][2] and [style guide][3].
+This module adds the following method which is accessible if you are creating custom facts. Note that each fact should contain:
 
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the
-root of your module directory and list out each of your module's classes,
-defined types, facts, functions, Puppet tasks, task plans, and resource types
-and providers, along with the parameters for each.
-
-For each element (class, defined type, function, and so on), list:
-
-* The data type, if applicable.
-* A description of what the element does.
-* Valid values, if the data type doesn't make it obvious.
-* Default value, if any.
-
-For example:
-
-```
-### `pet::cat`
-
-#### Parameters
-
-##### `meow`
-
-Enables vocalization in your cat. Valid options: 'string'.
-
-Default: 'medium-loud'.
+```ruby
+require 'facter/util/bigbigpuppetfacts'
 ```
 
-## Limitations
+To ensure that the methods are available when running Facter.
 
-In the Limitations section, list any incompatibilities, known issues, or other
-warnings.
+### `use_compressmethod_fallback(:fallback_method)` *Optional*
+
+When the 'use_compressmethod' is called, it superceded the method/method-chain to be used as the fallback method/method-chain when the desired method/method-chain's pre-check failed
+
+### `use_compressmethod(:method)`
+
+Set the desired compress method and run a pre-check on the method to determine its validity.
+
+### `compress(:data)`
+
+data to compress/encode/process
+
+### `decompress(:data)`
+
+data to decompress/decode/deprocess
+
+## Puppet Functions
+
+### `bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)`
+
+This method exposes the compress/processing/encoding method as Puppet Functions. The compress/processing/encoding methods can be implemented by ruby codes, shell scripts or loaded from addon modules.
+
+`data`: data to compress/encode/pros
+
+`use_runmethod`: Name of the method to use or the Name of the method-chain to use for the processing/encoding. Any of the following methods:
+  - `plain`
+  - `base64`
+  - `gz`
+  - method-chain e.g. `gz_base64`
+  - more methods can be added via other bigbigpuppetfacts_* modules
+
+`use_runmethodtype` *Optional* : There are direction for the method call: forward or backward. Any of the following units:
+
+  - `run`
+  - `reverse`
+  - `compress`
+  - `decompress`
+  - `encode`
+  - `decode`
+
+`info` *Optional* : Extra Data Hash which can be used provide additional data to the method/method-chain.
+
+## Compress/Process Methods
+
+| Compress Methods Names | Description and Comments | Provided By Module(s) | Puppet function Example | Ruby Example (in Custom Facts ), before calling `compress('data_to_compress')` or `decompress('data_to_compress')` |
+| :--------------------- | :--: | :-------------------: | :---------------------: | :--------------------------------------------: |
+| plain   |  plain encoding aka passthrough, fully supported by the puppet agent's default gems  | bigbigpuppetfacts | `bbpf_fn('data_to_compress','plain')` |  `use_compressmethod 'plain' ` |
+| base64  |  base64 encoding, fully supported by the puppet agent's default gems    | bigbigpuppetfacts | `bbpf_fn('data_to_compress','base64')` |  `use_compressmethod 'base64' ` |
+| gz |  gzip compression, fully supported by the puppet agent's default gems | bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','gz')` |  `use_compressmethod 'gz' ` |
+| xz |  xz compression, need additional gems to run, so it has be included in the module  | bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','xz')` |  `use_compressmethod 'xz' ` |
+| bz2 |  bzip2 compression, need additional gems to run, so it has be included in the module  | bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','bz2)` |  `use_compressmethod 'bz2' ` |
+| xz_base64 |  compressed the data with xz, then a base64 encoding | bigbigpuppetfacts & bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','xz_base64')` |  `use_compressmethod 'xz_base64' ` |
+
+
+
+
+
+### Supporting Custom Facts
+
+- `bbpf_supportmatrix`
+  Custom facts to show all the name of all the supported compress/decompression methods. This also shows the support level on the current node.
+
+	- Examples
+  ```json
+  { "bbpf_supportmatrix" : {
+      "7z::bzip2::shellout2" : "Supported",
+      "7z::gzip::shellout2" : "Supported",
+      "7z::xz::shellout2" : "Supported",
+      "7z::zip::shellout2" : "Supported",
+      "::error" : "Supported",
+      "Not_Supported" : "Not Supported",
+      "barcode" : "Supported",
+      "barcode::Bookland" : "Supported",
+      "barcode::Codabar" : "Supported",
+      "barcode::Code128" : "Supported",
+      "barcode::Code25" : "Supported",
+      "barcode::Code25IATA" : "Supported",
+      "barcode::Code25Interleaved" : "Supported",
+      "barcode::Code39" : "Supported",
+      "barcode::Code93" : "Supported",
+      "barcode::EAN13" : "Supported",
+      "barcode::EAN8" : "Supported",
+      "barcode::Pdf417Valente" : "Supported",
+      "barcode::UPCSupplemental" : "Supported",
+      "base64" : "Supported",
+      "bz2" : "Supported",
+      "bz2::auto" : "Supported",
+      "bz2::cmd" : "Not Supported",
+      "bz2::ffi" : "Supported",
+      "bz2::java" : "Not Supported",
+      "bz2::ruby" : "Supported",
+      "bz2_base64" : "Supported",
+      "bzip2" : "Supported",
+      "cowdragon" : "Supported",
+      "cowdragon::shellout2" : "Supported",
+      "cowdragon::shellout2::filein::fileout" : "Supported",
+      "cowdragon::shellout2::filein::pipeout" : "Supported",
+      "cowdragon::shellout2::pipein::pipeout" : "Supported",
+      "cowsay" : "Supported",
+      "cowsay::shellout2" : "Supported",
+      "cowsay::shellout2::filein::fileout" : "Supported",
+      "cowsay::shellout2::filein::pipeout" : "Supported",
+      "cowsay::shellout2::pipein::pipeout" : "Supported",
+      "examplelinuxscript" : "Supported",
+      "gz" : "Supported",
+      "gz::simplecompress" : "Not Supported",
+      "gz::zlib" : "Supported",
+      "gz::zlibgzip" : "Supported",
+      "gz_base64" : "Supported",
+      "plain" : "Supported",
+      "plain_json" : "Supported",
+      "plain_yaml" : "Supported",
+      "qr" : "Supported",
+      "xz" : "Supported",
+      "xz_base64" : "Supported"
+    }
+  }
+  ```
 
 ## Development
 
-In the Development section, tell other users the ground rules for contributing
-to your project and how they should submit their work.
+There is no test for the main component for this module yet to just fork and raise a PR.
+There is however a test for the supporting custom fact: `bbpf_supportmatrix`.
 
-## Release Notes/Contributors/Etc. **Optional**
+Debugging can be triggered via the above test as a spec test.
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You can also add any additional sections you feel are
-necessary or important to include here. Please use the `##` header.
+Alternatively, there are additional test: a simple ruby script: [examples/tests/testbigbigpuppetfacts.rb](examples/tests/testbigbigpuppetfacts.rb). This can be used as an entry to the debugging effort.
 
-[1]: https://puppet.com/docs/pdk/latest/pdk_generating_modules.html
-[2]: https://puppet.com/docs/puppet/latest/puppet_strings.html
-[3]: https://puppet.com/docs/puppet/latest/puppet_strings_style.html
+Dependent Modules (bigbigpuppetfacts_*) which are developed based on this module
+- bigbigpuppetfacts_examplelibs
+- bigbigpuppetfacts_command
+- bigbigpuppetfacts_qrcode
+
+Hooks are placed in this module to load other methods (from the dependent modules) into this framework, so that it can be called via __Puppet Functions__ and integrate with Facter, so it can be used easily using the above mentioned supporting APIs: use_compressmethod, use_compressmethod_falback, compress and decompress. It is also checked and verified to able to run by the __Supporting Custom Fact__ `bbpf_supportmatrix` .
