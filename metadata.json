@@ -1,6 +1,6 @@
 {
   "name": "sooyeanhoo-bigbigpuppetfacts_examplelibs",
-  "version": "PEL.0.1.0",
+  "version": "0.1.0",
   "author": "Hoo Sooyean 何書淵",
   "summary": "Enable Fact Compression in custom facts. It only provide the apis and a fact which check the support matrix of the compression methods.",
   "license": "Apache-2.0",
