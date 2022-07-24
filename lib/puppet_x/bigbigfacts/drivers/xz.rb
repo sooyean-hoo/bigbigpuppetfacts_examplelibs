@@ -35,5 +35,9 @@ class BBPFDrivers::XZ
     $LOAD_PATH << lib_path unless $LOAD_PATH.include?(lib_path)
 
     autoload :XZ, 'xz'
+    # For excluding from bbpf_supportmatrix's autotest
+    # bbpf_supportmatrix_noautotest = []
+    # bbpf_supportmatrix_noautotest << 'xz'
+    # bbpf_supportmatrix_noautotest
   end
 end
