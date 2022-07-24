@@ -1,71 +1,60 @@
 
-# bigbigpuppetfacts
+# bigbigpuppetfacts_examplelibs
 
-Provide engine to ease the processing, encoding and compressing of facts. It comes
+Provide an addon/extension to the bigbigpuppetfacts engine, which eases the processing, encoding and compressing of facts. It comes
 with functions to compress and encoding facts, which are long-running/expensive and
 yet too big to store in puppetdb.
+
+This also served as an example of add addons to the engine: provide additional methods
+to the engine.
 
 
 #### Table of Contents
 
-- [bigbigpuppetfacts](#bigbigpuppetfacts)
+- [bigbigpuppetfacts_examplelibs](#bigbigpuppetfacts_examplelibs)
       - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Usage](#usage)
-    - [Regular Facts](#regular-facts)
-    - [Aggregate Facts](#aggregate-facts)
-    - [Puppet Functions, used in Puppet Manifest](#puppet-functions-used-in-puppet-manifest)
+    - [Regular Facts (Inherited from bigbigpuppetfacts)](#regular-facts-inherited-from-bigbigpuppetfacts)
+    - [Aggregate Facts (Inherited from bigbigpuppetfacts)](#aggregate-facts-inherited-from-bigbigpuppetfacts)
+    - [Puppet Functions, used in Puppet Manifest  (Inherited from bigbigpuppetfacts)](#puppet-functions-used-in-puppet-manifest--inherited-from-bigbigpuppetfacts)
   - [Reference](#reference)
     - [`use_compressmethod_fallback(:fallback_method)` *Optional*](#use_compressmethod_fallbackfallback_method-optional)
     - [`use_compressmethod(:method)`](#use_compressmethodmethod)
     - [`compress(:data)`](#compressdata)
+    - [`decompress(:data)`](#decompressdata)
   - [Puppet Functions](#puppet-functions)
-    - [`bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)`](#bbpf_fndata-use_runmethod-use_runmethodtype-bigbigpuppetfacts)
-  - [Compress/Process Methods](#compressprocess-methods)
-    - [Supporting Custom Facts](#supporting-custom-facts)
+    - [`bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)` (Inherited from bigbigpuppetfacts)](#bbpf_fndata-use_runmethod-use_runmethodtype-bigbigpuppetfacts-inherited-from-bigbigpuppetfacts)
+  - [Compress/Process Methods (Inherited from bigbigpuppetfacts)](#compressprocess-methods-inherited-from-bigbigpuppetfacts)
   - [Development](#development)
+    - [Drivers](#drivers)
 
 ## Description
 
-This creates a framework for add-on processing of facts. There are various processings
-can be extended by add new modules namely module named bigbigpuppetfacts_*
+This demostrates how to add new modules:those named bigbigpuppetfacts_*
 
-This started as a framework to allow for puppet facts to compress into base64 encoding: there is
-compression before the encoding. This is to address the concerns of having huge facts
-of size > 30MB. This function is still part of the module. It is broken unto 2 parts:
+This involves writing ruby codes in lib/puppet_x/bigbigfacts/drivers. These are very simple ruby codes, which are very intuitive even for laymen and non-ruby programmers.
 
-* Methods using the puppet built-in ruby gems/libraries and included by this module.
-  * gz: gzip
-  * base64: base64 encoding
-  * ^json: json encoding
-  * ^yaml: yaml encoding
-  * plain: There is no encoding, just a passthrough.
-  * bbpf: Internal encoding, where the compression method is encoded as part of the encoding.
-  * dataurl: Internal encoding, leveraging on other encoding/compression (esp base64) to have a
-result which you put as a data-url.
-  * bash: Internal encoding, leveraging on other encoding/compression (esp base64) to have self-extracting
-bash script.
 
 * Methods needs extra ruby gems/libraries, usually as another dependent puppet modules
-  * xz - Packagedin bigbigpuppetfacts_examplelibs module
-  * bz2 - Packaged in bigbigpuppetfacts_examplelibs module
-  * 7z - Packaged in bigbigpuppetfacts_examplelibs module
-  * qr - Packaged in bigbigpuppetfacts_qrcode module
-  * cowsay - Packaged in bigbigpuppetfacts_command module
+  * xz - Packaged along with its needed gems and library.
+  * bz2 & a few variants - Packaged along with its needed gems and libraries.
+  * 7z - No GEMs Packaged here, using CLI/shellout interface only.
 
-Here is a family tree of dependency modules.
+
+
+
+Here is a family tree of dependency modules, from the point of view of this module.
 _**Note for developers of the new dependent modules, feel free to update this tree._
 
 ```mermaid
   graph TD;
       bigbigpuppetfacts_examplelibs--depends-->bigbigpuppetfacts;
-      bigbigpuppetfacts_qrcode--depends-->bigbigpuppetfacts;
-      bigbigpuppetfacts_command--depends-->bigbigpuppetfacts;
 ```
 
 ## Usage
 
-### Regular Facts
+### Regular Facts (Inherited from bigbigpuppetfacts)
 
 ```ruby
 require 'facter/util/bigbigpuppetfacts'
@@ -80,7 +69,7 @@ Facter.add(:verybigfact) do
 end
 
 ## This tries to work on the String 'This is an expensive value'. It compresses the
-## data using 'gzip' method, then followed up with 'base64'. The result of this operation
+## data using 'xz' method, then followed up with 'base64'. The result of this operation
 ## is then set as the value of the fact with the name 'verybigfact'.
 ##
 ## In the event of failure during the pre-check when the 'use_compressmethod' is called
@@ -91,25 +80,25 @@ end
 
 ```
 
-### Aggregate Facts
+### Aggregate Facts (Inherited from bigbigpuppetfacts)
 
 ```ruby
 require 'facter/util/bigbigpuppetfacts'
 
 Facter.add(:aggregate_verybigfact, :type => :aggregate) do
   use_compressmethod_fallback 'plain'
-  use_compressmethod 'gz_base64'
+  use_compressmethod 'xz_base64'
 
   chunk(:ex1) do
     interfaces = {}
-    interfaces[:ex1]=compress('This is an expensive value,1 compressed by gzip, then
+    interfaces[:ex1]=compress('This is an expensive value,1 compressed by xz, then
     encoded by base64')
     interfaces
   end
 
   chunk(:ex2) do
     interfaces = {}
-    interfaces[:ex2]=compress('This is an expensive value2, compressed by gzip, then
+    interfaces[:ex2]=compress('This is an expensive value2, compressed by xz, then
     encoded by base64 ')
     interfaces
   end
@@ -127,7 +116,7 @@ end
 
 
 ```
-### Puppet Functions, used in Puppet Manifest
+### Puppet Functions, used in Puppet Manifest  (Inherited from bigbigpuppetfacts)
 
    - As part of the Puppet Manifest:
    ```bash
@@ -135,8 +124,8 @@ end
       bbpf_fn('aaaaaa', 'base64') => 'aaaaaa'
       'aaaaaa'.bbpf_fn('base64') => 'YWFhYWFh'
       '0000'.bbpf_fn('base64').bbpf_fn('base64','reverse') => '0000' # This encodes, then decodes by base644
-      '0000'.bbpf_fn('gz_base64') => 'H4sIAGY52GIAAzMwMDAAAHLEmwwEAAAA'
-      '0000'.bbpf_fn('gz_base64').bbpf_fn('gz_base64','reverse') => '0000'
+      '0000'.bbpf_fn('xz_base64') => 'LJzBH7bzfQEAAAAABFla'
+      '0000'.bbpf_fn('xz_base64').bbpf_fn('xz_base64','reverse') => '0000'
       'bbbb'.bbpf_fn('plain')  => 'bbbb'
   ```
   - At bash prompt:
@@ -176,17 +165,17 @@ data to decompress/decode/deprocess
 
 ## Puppet Functions
 
-### `bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)`
+### `bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)` (Inherited from bigbigpuppetfacts)
 
 This method exposes the compress/processing/encoding method as Puppet Functions. The compress/processing/encoding methods can be implemented by ruby codes, shell scripts or loaded from addon modules.
 
 `data`: data to compress/encode/pros
 
 `use_runmethod`: Name of the method to use or the Name of the method-chain to use for the processing/encoding. Any of the following methods:
-  - `plain`
-  - `base64`
-  - `gz`
-  - method-chain e.g. `gz_base64`
+  - `xz`
+  - `bz2`
+  - `7z`
+  - method-chain e.g. `xz_base64`
   - more methods can be added via other bigbigpuppetfacts_* modules
 
 `use_runmethodtype` *Optional* : There are direction for the method call: forward or backward. Any of the following units:
@@ -200,82 +189,20 @@ This method exposes the compress/processing/encoding method as Puppet Functions.
 
 `info` *Optional* : Extra Data Hash which can be used provide additional data to the method/method-chain.
 
-## Compress/Process Methods
+## Compress/Process Methods (Inherited from bigbigpuppetfacts)
 
 | Compress Methods Names | Description and Comments | Provided By Module(s) | Puppet function Example | Ruby Example (in Custom Facts ), before calling `compress('data_to_compress')` or `decompress('data_to_compress')` |
 | :--------------------- | :--: | :-------------------: | :---------------------: | :--------------------------------------------: |
-| plain   |  plain encoding aka passthrough, fully supported by the puppet agent's default gems  | bigbigpuppetfacts | `bbpf_fn('data_to_compress','plain')` |  `use_compressmethod 'plain' ` |
-| base64  |  base64 encoding, fully supported by the puppet agent's default gems    | bigbigpuppetfacts | `bbpf_fn('data_to_compress','base64')` |  `use_compressmethod 'base64' ` |
-| gz |  gzip compression, fully supported by the puppet agent's default gems | bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','gz')` |  `use_compressmethod 'gz' ` |
 | xz |  xz compression, need additional gems to run, so it has be included in the module  | bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','xz')` |  `use_compressmethod 'xz' ` |
 | bz2 |  bzip2 compression, need additional gems to run, so it has be included in the module  | bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','bz2)` |  `use_compressmethod 'bz2' ` |
+| 7z |  7zip compression, need additional gems to run, so it has be included in the module  | bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','bz2)` |  `use_compressmethod 'bz2' ` |
 | xz_base64 |  compressed the data with xz, then a base64 encoding | bigbigpuppetfacts & bigbigpuppetfacts_examplelibs | `bbpf_fn('data_to_compress','xz_base64')` |  `use_compressmethod 'xz_base64' ` |
 
 
 
 
 
-### Supporting Custom Facts
 
-- `bbpf_supportmatrix`
-  Custom facts to show all the name of all the supported compress/decompression methods. This also shows the support level on the current node.
-
-	- Examples
-  ```json
-  { "bbpf_supportmatrix" : {
-      "7z::bzip2::shellout2" : "Supported",
-      "7z::gzip::shellout2" : "Supported",
-      "7z::xz::shellout2" : "Supported",
-      "7z::zip::shellout2" : "Supported",
-      "::error" : "Supported",
-      "Not_Supported" : "Not Supported",
-      "barcode" : "Supported",
-      "barcode::Bookland" : "Supported",
-      "barcode::Codabar" : "Supported",
-      "barcode::Code128" : "Supported",
-      "barcode::Code25" : "Supported",
-      "barcode::Code25IATA" : "Supported",
-      "barcode::Code25Interleaved" : "Supported",
-      "barcode::Code39" : "Supported",
-      "barcode::Code93" : "Supported",
-      "barcode::EAN13" : "Supported",
-      "barcode::EAN8" : "Supported",
-      "barcode::Pdf417Valente" : "Supported",
-      "barcode::UPCSupplemental" : "Supported",
-      "base64" : "Supported",
-      "bz2" : "Supported",
-      "bz2::auto" : "Supported",
-      "bz2::cmd" : "Not Supported",
-      "bz2::ffi" : "Supported",
-      "bz2::java" : "Not Supported",
-      "bz2::ruby" : "Supported",
-      "bz2_base64" : "Supported",
-      "bzip2" : "Supported",
-      "cowdragon" : "Supported",
-      "cowdragon::shellout2" : "Supported",
-      "cowdragon::shellout2::filein::fileout" : "Supported",
-      "cowdragon::shellout2::filein::pipeout" : "Supported",
-      "cowdragon::shellout2::pipein::pipeout" : "Supported",
-      "cowsay" : "Supported",
-      "cowsay::shellout2" : "Supported",
-      "cowsay::shellout2::filein::fileout" : "Supported",
-      "cowsay::shellout2::filein::pipeout" : "Supported",
-      "cowsay::shellout2::pipein::pipeout" : "Supported",
-      "examplelinuxscript" : "Supported",
-      "gz" : "Supported",
-      "gz::simplecompress" : "Not Supported",
-      "gz::zlib" : "Supported",
-      "gz::zlibgzip" : "Supported",
-      "gz_base64" : "Supported",
-      "plain" : "Supported",
-      "plain_json" : "Supported",
-      "plain_yaml" : "Supported",
-      "qr" : "Supported",
-      "xz" : "Supported",
-      "xz_base64" : "Supported"
-    }
-  }
-  ```
 
 ## Development
 
@@ -292,3 +219,43 @@ Dependent Modules (bigbigpuppetfacts_*) which are developed based on this module
 - bigbigpuppetfacts_qrcode
 
 Hooks are placed in this module to load other methods (from the dependent modules) into this framework, so that it can be called via __Puppet Functions__ and integrate with Facter, so it can be used easily using the above mentioned supporting APIs: use_compressmethod, use_compressmethod_falback, compress and decompress. It is also checked and verified to able to run by the __Supporting Custom Fact__ `bbpf_supportmatrix` .
+
+### Drivers
+As mentioned above, ruby codes, which are in lib/puppet_x/bigbigfacts/drivers, are the only things which this module contribute to to the bigbigpuppetfacts framework. They are also the only code which developers need to work on to extend the methods/functions of the framework.
+These codes are the driver for that method. So each driver will be 1 ruby file under the folder lib/puppet_x/bigbigfacts/drivers. One ruby file, aka 1 driver can specified multiple process/compress/encoding method.
+These will be illustrate via examples.
+
+There are 2 types of supported methods: symmetric methods/functions and asymmetric methods/functions.
+
+- symmetric methods/functions
+  There are functions has an inverse. Hence if the function is denoted as f(x) and its inverse is i(x), then x = i((f(x)). Alternatively, if this is expressed in Linux commands with pipes,
+  `echo "XXXXX" | f | i ` will print out XXXXX. Both the function and its inverse can be expressed in ruby code or other support form. They are to specified by the driver
+
+- asymmetric methods/functions
+	These are the functions without an inverse.
+
+#### Asymmetric methods/functions
+For this current module, we will be dealing with symmetric methods/functions which has the functions and its inverse counterpart here.
+There are 3 examples here for each of the possible scenario:
+
+- xz.rb
+  This is the simplest form of the driver. This is a ruby implementation of the method.
+
+  - Driver name
+  > The driver name is 'BBPFDrivers::XZ'. The driver loads only 1 method: xz.
+
+  - Compressmethods/decompressmethods
+  >The method is loaded as a proc under the ruby method `compressmethods`, while its inverse in loaded under the ruby method `decompressmethods`.
+
+  - Test_methods
+  > Since this is a symmetric method, the testing will be a simple form of `x == i(f(x)) ` . Although the test method is specified in the ruby method `test_methods`, it is redundent. The default test is `x == i(f(x)) `. We usually overwrite the test here for the asymmetric methods.
+
+  - Autoload_declare
+  > xz method need some addition gems to work, so here we get ruby to load these extra gem or libraries. However we do not just load the library, just in case this method is never used at all. So we set ruby to load it only if the Compressmethods/decompressmethods is ever called once. Please note that the `bbpf_supportmatrix` does call every method once. If you want finer control of the library loading, it would be best if you exclude your new method from autotesting in `bbpf_supportmatrix` custom fact. This done by addin the name of the method into a array.
+
+  > As you may notice this a way to include addition gems and libraries to the puppet agent run without updating or change the default puppet's gempath. The ways to update the gems are documented [here](README_update.md). This is a cleaner way to package gem/libraries into the puppet agent run, as in the event that this module is removed from the node's environment, there will be not residual gems/libraries contamination the puppet agent's ruby gempath.
+
+
+- bzip2.rb
+
+- 7z.rb
