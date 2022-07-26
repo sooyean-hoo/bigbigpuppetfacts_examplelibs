@@ -8,7 +8,6 @@
   "project_page": "https://github.com/sooyean-hoo/bigbigpuppetfacts_" ,
    "issues_url": "https://github.com/sooyean-hoo/bigbigpuppetfacts_/issues",
   "dependencies": [
-	"sooyeanhoo-bigbigpuppetfacts"
   ],
   "operatingsystem_support": [
     {
