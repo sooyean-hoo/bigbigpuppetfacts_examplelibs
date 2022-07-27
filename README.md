@@ -54,6 +54,10 @@ _**Note for developers of the new dependent modules, feel free to update this tr
 
 ## Usage
 
+[ See bigbigpuppetfacts for more details]( https://github.com/sooyean-hoo/bigbigpuppetfacts_/blob/4publicversion/README.md#usage )
+<details>
+<summary>Click to see Usage </summary>
+
 ### Regular Facts (Inherited from bigbigpuppetfacts)
 
 ```ruby
@@ -135,9 +139,14 @@ end
       sudo -E /opt/puppetlabs/bin/puppet apply -e "notice( bbpf_fn('aaaaaa', 'base64'))"  --modulepath=`sudo /opt/puppetlabs/bin/puppet config print vardir`/../
       sudo -E /opt/puppetlabs/bin/puppet apply -e "notify{ bbpf_fn('aaaaaa', 'base64'):}"  --modulepath=`sudo /opt/puppetlabs/bin/puppet config print vardir`/../
   ```
+</details>
 
 
 ## Reference
+
+[ See bigbigpuppetfacts for more details](https://github.com/sooyean-hoo/bigbigpuppetfacts_/blob/4publicversion/README.md#reference)
+<details>
+<summary>Click to see Reference  </summary>
 
 This module adds the following method which is accessible if you are creating custom facts. Note that each fact should contain:
 
@@ -165,29 +174,31 @@ data to decompress/decode/deprocess
 
 ## Puppet Functions
 
-### `bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)` (Inherited from bigbigpuppetfacts)
+### `bbpf_fn(data, use_runmethod, use_runmethodtype, bigbigpuppetfacts)`
 
-This method exposes the compress/processing/encoding method as Puppet Functions. The compress/processing/encoding methods can be implemented by ruby codes, shell scripts or loaded from addon modules.
+This exposes the compress/processing/encoding method as Puppet Custom Functions. The compress/processing/encoding methods can be implemented by ruby codes, shell scripts or loaded from addon modules.
 
-`data`: data to compress/encode/pros
+`data`: data to be compress/encode/process-ed
 
-`use_runmethod`: Name of the method to use or the Name of the method-chain to use for the processing/encoding. Any of the following methods:
-  - `xz`
-  - `bz2`
-  - `7z`
-  - method-chain e.g. `xz_base64`
+`use_runmethod`: Name of the method/method-chain to use for the processing/encoding. Any of the following methods/method-chains:
+  - `plain`
+  - `base64`
+  - `gz`
+  - method-chain e.g. `gz_base64`
   - more methods can be added via other bigbigpuppetfacts_* modules
 
-`use_runmethodtype` *Optional* : There are direction for the method call: forward or backward. Any of the following units:
+`use_runmethodtype` *Optional* : There are 2 directions for the methods/method-chains: forward or backward. Any of the following units:
 
-  - `run`
-  - `reverse`
-  - `compress`
-  - `decompress`
-  - `encode`
-  - `decode`
+  - `run` - forward
+  - `reverse` - backward
+  - `compress` - forward
+  - `decompress` - backward
+  - `encode` - forward
+  - `decode` - backward
 
-`info` *Optional* : Extra Data Hash which can be used provide additional data to the method/method-chain.
+`info` *Optional* : Extra Data Hash which can be used to provide additional settings to the method/method-chain.
+
+</details>
 
 ## Compress/Process Methods (Inherited from bigbigpuppetfacts)
 
