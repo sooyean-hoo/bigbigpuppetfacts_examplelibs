@@ -6,13 +6,35 @@ class BBPFDrivers::XZ
 
   def compressmethods
     {
-      'xz' => proc { |data, _info: {}| XZ.compress(data) }
+      'xz::simple' => proc { |data, _info: {}| XZ.compress(data) },
+      'xz::shellout2' => proc { |data, _info: {}|
+                           Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, 'xz ')
+                         },
+
+      'xz' => proc { |data, _info: {}|
+                begin
+                  compressmethods['xz::simple'].call(data)
+                rescue NameError, LoadError
+                  compressmethods['xz::shellout2'].call(data)
+                end
+              }
     }
   end
 
   def decompressmethods
     {
-      'xz' => proc { |data, _info: {}| XZ.decompress(data) }
+      'xz::simple' => proc { |data, _info: {}| XZ.decompress(data) },
+      'xz::shellout2' => proc { |data, _info: {}|
+                           Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, 'xz -d ')
+                         },
+
+      'xz' => proc { |data, _info: {}|
+                begin
+                  decompressmethods['xz::simple'].call(data)
+                rescue NameError, LoadError
+                  decompressmethods['xz::shellout2'].call(data)
+                end
+              }
     }
   end
 
@@ -22,11 +44,12 @@ class BBPFDrivers::XZ
 
   def test_methods
     {
-      'xz' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
-        decompressmethods['xz'].call(
-          compressmethods['xz'].call(data, _info: _info), _info: _info
+      'xz::simple' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
+        decompressmethods['xz::simple'].call(
+          compressmethods['xz::simple'].call(data, _info: _info), _info: _info
         )
       }
+      ### The rest of the default Just use the Default tests.
     }
   end
 
