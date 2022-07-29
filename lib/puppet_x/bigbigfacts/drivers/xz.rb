@@ -8,8 +8,9 @@ class BBPFDrivers::XZ
     {
       'xz::simple' => proc { |data, _info: {}| XZ.compress(data) },
       'xz::shellout2' => proc { |data, _info: {}|
-                           Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, ' tee | xz -z | tee ')
-                         },
+          _info.merge!({'PATH' => '/usr/local/bin/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'})
+          Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, ' tee | xz -z -c | tee ', _info:_info)
+        },
 
       'xz' => proc { |data, _info: {}|
                 begin
@@ -25,8 +26,9 @@ class BBPFDrivers::XZ
     {
       'xz::simple' => proc { |data, _info: {}| XZ.decompress(data) },
       'xz::shellout2' => proc { |data, _info: {}|
-                           Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, ' tee | xz -d | tee ')
-                         },
+          _info.merge!({'PATH' => '/usr/local/bin/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'})
+          Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, ' tee | xz -d -c | tee ', _info:_info)
+        },
 
       'xz' => proc { |data, _info: {}|
                 begin
