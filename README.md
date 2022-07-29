@@ -250,10 +250,10 @@ For this current module, we will be dealing with symmetric methods/functions whi
 There are 3 examples here for each of the possible scenario:
 
 - xz.rb
-  This is the simplest form of the driver. This is a ruby implementation of the method.
+  This is the simplest form of the driver. This is a ruby implementation of the method. The shown by the xz::simple.
 
   - Driver name
-  > The driver name is 'BBPFDrivers::XZ'. The driver loads only 1 method: xz.
+  > The driver name is 'BBPFDrivers::XZ'. The driver loads mainly only 1 method: xz. This is abstracted by xz to use the underlying xz::simple.
 
   - Compressmethods/decompressmethods
   >The method is loaded as a proc under the ruby method `compressmethods`, while its inverse in loaded under the ruby method `decompressmethods`.
