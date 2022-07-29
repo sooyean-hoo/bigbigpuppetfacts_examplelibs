@@ -8,7 +8,7 @@ class BBPFDrivers::XZCMD
     {
       'xz::cmd' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
                      _info['PATH'] = '/usr/local/bin/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
-                     Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, 'cp <TMPFILE> <TMPDIR>/d.txt && xz <TMPDIR>/d.txt', '<TMPDIR>/d.txt.xz', _info: _info)
+                     Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, 'xz -9 <TMPDIR>/data.dat', '<TMPDIR>/data.dat.xz', _info: _info)
                    },
     }
   end
@@ -17,7 +17,7 @@ class BBPFDrivers::XZCMD
     {
       'xz::cmd' => proc { |data, _info: {}| # rubocop:disable Lint/UnderscorePrefixedVariableName
                      _info['PATH'] = '/usr/local/bin/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
-                     Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, 'cp <TMPFILE> <TMPDIR>/d.txt.xz && xz -d <TMPDIR>/d.txt.xz', '<TMPDIR>d.txt', _info: _info)
+                     Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, 'cp <TMPDIR>/data.dat <TMPDIR>/data.dat1.xz && xz -d <TMPDIR>/data.dat1.xz', '<TMPDIR>/data.dat1', _info: _info)
                    },
     }
   end
