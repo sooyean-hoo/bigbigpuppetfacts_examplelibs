@@ -32,7 +32,7 @@ class BBPFDrivers::BZIP2
                       },
 
        'bz2::cmd' => proc { |data, _info: {}|
-                       compressmethods['::shellout'].call(data, 'bzip2 -z --best -s -qc ', 'tee')
+                       Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, 'bzip2 -z --best -s -qc ')
                      },
 
        'bz2::auto' => proc { |data, _info: {}|
@@ -93,7 +93,7 @@ class BBPFDrivers::BZIP2
       },
 
       'bz2::cmd' => proc { |data, _info: {}|
-                      compressmethods['::shellout'].call(data, 'bzip2 -d --best -s -qc ', 'tee')
+                      Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, 'bzip2 -d --best -s -qc ')
                     },
 
       'bzip2' => proc { |data, _info: {}|
