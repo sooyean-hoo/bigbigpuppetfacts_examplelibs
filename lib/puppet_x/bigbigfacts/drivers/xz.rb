@@ -17,6 +17,8 @@ class BBPFDrivers::XZ
                   compressmethods['xz::simple'].call(data)
                 rescue NameError, LoadError, TypeError
                   compressmethods['xz::shellout2'].call(data)
+                rescue
+                  compressmethods['xz::shellout2'].call(data)
                 end
               }
     }
@@ -34,6 +36,8 @@ class BBPFDrivers::XZ
                 begin
                   decompressmethods['xz::simple'].call(data)
                 rescue NameError, LoadError, TypeError
+                  decompressmethods['xz::shellout2'].call(data)
+                rescue
                   decompressmethods['xz::shellout2'].call(data)
                 end
               }
