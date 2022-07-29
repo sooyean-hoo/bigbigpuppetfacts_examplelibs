@@ -36,7 +36,7 @@ This demostrates how to add new modules:those named bigbigpuppetfacts_*
 This involves writing ruby codes in lib/puppet_x/bigbigfacts/drivers. These are very simple ruby codes, which are very intuitive even for laymen and non-ruby programmers.
 
 
-* Methods needs extra ruby gems/libraries, usually as another dependent puppet modules
+* These methods need extra ruby gems/libraries, so they are packaged as this separated dependent puppet module. The followings are what is packaged here.
   * xz - Packaged along with its needed gems and library.
   * bz2 & a few variants - Packaged along with its needed gems and libraries.
   * 7z - No GEMs Packaged here, using CLI/shellout interface only.
@@ -54,7 +54,7 @@ _**Note for developers of the new dependent modules, feel free to update this tr
 
 ## Usage
 
-[ See bigbigpuppetfacts for more details]( https://github.com/sooyean-hoo/bigbigpuppetfacts_/blob/4publicversion/README.md#usage )
+A brief one here. [ See bigbigpuppetfacts for more details]( https://github.com/sooyean-hoo/bigbigpuppetfacts_/blob/4publicversion/README.md#usage )
 <details>
 <summary>Click to see Usage </summary>
 
@@ -144,7 +144,7 @@ end
 
 ## Reference
 
-[ See bigbigpuppetfacts for more details](https://github.com/sooyean-hoo/bigbigpuppetfacts_/blob/4publicversion/README.md#reference)
+A brief one here. [ See bigbigpuppetfacts for more details](https://github.com/sooyean-hoo/bigbigpuppetfacts_/blob/4publicversion/README.md#reference)
 <details>
 <summary>Click to see Reference  </summary>
 
@@ -224,49 +224,93 @@ Debugging can be triggered via the above test as a spec test.
 
 Alternatively, there are additional test: a simple ruby script: [examples/tests/testbigbigpuppetfacts.rb](examples/tests/testbigbigpuppetfacts.rb). This can be used as an entry to the debugging effort.
 
-Dependent Modules (bigbigpuppetfacts_*) which are developed based on this module
+Dependent Modules (bigbigpuppetfacts_*) which are developed based on the main engine module: bigbigpuppetfacts
 - bigbigpuppetfacts_examplelibs
 - bigbigpuppetfacts_command
 - bigbigpuppetfacts_qrcode
 
-Hooks are placed in this module to load other methods (from the dependent modules) into this framework, so that it can be called via __Puppet Functions__ and integrate with Facter, so it can be used easily using the above mentioned supporting APIs: use_compressmethod, use_compressmethod_falback, compress and decompress. It is also checked and verified to able to run by the __Supporting Custom Fact__ `bbpf_supportmatrix` .
+Hooks are placed in the bigbigpuppetfacts module to load other methods (from the dependent modules) into this framework, so that it can be called via __Puppet Functions__ and __integrated with Facter__, so it can be used easily using the above mentioned __supporting APIs__ : __use_compressmethod__, __use_compressmethod_falback__, __compress__ and __decompress__. It is also checked and verified to be able to run on the agents by the __Supporting Custom Fact__ `bbpf_supportmatrix` .
 
 ### Drivers
-As mentioned above, ruby codes, which are in lib/puppet_x/bigbigfacts/drivers, are the only things which this module contribute to to the bigbigpuppetfacts framework. They are also the only code which developers need to work on to extend the methods/functions of the framework.
-These codes are the driver for that method. So each driver will be 1 ruby file under the folder lib/puppet_x/bigbigfacts/drivers. One ruby file, aka 1 driver can specified multiple process/compress/encoding method.
-These will be illustrate via examples.
+As mentioned above, ruby codes, which are in `lib/puppet_x/bigbigfacts/drivers`, are the only things which this module contribute to to the bigbigpuppetfacts framework. They are also the only code which developers need to work on to extend the methods/functions of the framework. We called this codes __Drivers__.
 
-There are 2 types of supported methods: symmetric methods/functions and asymmetric methods/functions.
+Here are some examples:
+- [lib/puppet_x/bigbigfacts/drivers/7z.rb](lib/puppet_x/bigbigfacts/drivers/7z.rb)
+- [lib/puppet_x/bigbigfacts/drivers/bzip2.rb](lib/puppet_x/bigbigfacts/drivers/bzip2.rb)
+- [lib/puppet_x/bigbigfacts/drivers/xz.rb](lib/puppet_x/bigbigfacts/drivers/xz.rb)
 
-- symmetric methods/functions
-  There are functions has an inverse. Hence if the function is denoted as f(x) and its inverse is i(x), then x = i((f(x)). Alternatively, if this is expressed in Linux commands with pipes,
-  `echo "XXXXX" | f | i ` will print out XXXXX. Both the function and its inverse can be expressed in ruby code or other support form. They are to specified by the driver
+So the driver is essentially 1 ruby file under the folder lib/puppet_x/bigbigfacts/drivers. Each ruby file, aka 1 driver can specified multiple process/compress/encoding method.
+These will be illustrated via examples below.
 
-- asymmetric methods/functions
+
+There are 2 types of supported methods: __symmetric methods/functions__ and __asymmetric methods/functions__.
+
+- __symmetric methods/functions__
+  There are functions which have an inverse each. Hence if the function is denoted as f(x) and its inverse as i(x), then x = i((f(x)). Alternatively, if this is expressed in Linux commands with pipes,
+  `echo "XXXXX" | f | i ` will print out XXXXX. Both the function and its inverse can be expressed in ruby code or other supported forms. They are to specified by each of the drivers.
+
+- __asymmetric methods/functions__
 	These are the functions without an inverse.
 
 #### Asymmetric methods/functions
-For this current module, we will be dealing with symmetric methods/functions which has the functions and its inverse counterpart here.
+For this current module, we will be only dealing with __symmetric methods/functions__ : the functions and its inverse counterpart here.
 There are 3 examples here for each of the possible scenario:
 
-- xz.rb
+- [__xz.rb__](lib/puppet_x/bigbigfacts/drivers/xz.rb)
   This is the simplest form of the driver. This is a ruby implementation of the method.
 
-  - Driver name
+  - _Driver name_
   > The driver name is 'BBPFDrivers::XZ'. The driver loads only 1 method: xz.
 
-  - Compressmethods/decompressmethods
+  - _Compressmethods/decompressmethods_
   >The method is loaded as a proc under the ruby method `compressmethods`, while its inverse in loaded under the ruby method `decompressmethods`.
 
-  - Test_methods
+  - _Test_methods_
   > Since this is a symmetric method, the testing will be a simple form of `x == i(f(x)) ` . Although the test method is specified in the ruby method `test_methods`, it is redundent. The default test is `x == i(f(x)) `. We usually overwrite the test here for the asymmetric methods.
 
-  - Autoload_declare
-  > xz method need some addition gems to work, so here we get ruby to load these extra gem or libraries. However we do not just load the library, just in case this method is never used at all. So we set ruby to load it only if the Compressmethods/decompressmethods is ever called once. Please note that the `bbpf_supportmatrix` does call every method once. If you want finer control of the library loading, it would be best if you exclude your new method from autotesting in `bbpf_supportmatrix` custom fact. This done by addin the name of the method into a array.
+  - _Autoload_declare_
+  > xz method need some addition gems to work, so here we get ruby to load these extra gem or libraries. However we do not load the library directly, just in case the method is never used at all. So we set ruby to load it only if the Compressmethods/decompressmethods is ever called. Please note that the `bbpf_supportmatrix` does call every method once. If you want finer control of the library loading, it would be best if you exclude your new method from autotesting in `bbpf_supportmatrix` custom fact. This done by addin the name of the method into a array.
 
-  > As you may notice this a way to include addition gems and libraries to the puppet agent run without updating or change the default puppet's gempath. The ways to update the gems are documented [here](README_update.md). This is a cleaner way to package gem/libraries into the puppet agent run, as in the event that this module is removed from the node's environment, there will be not residual gems/libraries contamination the puppet agent's ruby gempath.
+  > As you may notice this is a way to include additional gems and libraries to the puppet agent run without updating or change the default puppet's gempath. The ways to update the gems are documented [here](README_update.md). This is a cleaner way to package gem/libraries into the puppet agent run. In the event that this module is removed from the node's environment, there will be no residual gems/libraries contamination to the puppet agent's ruby gempath from this module.
 
 
-- bzip2.rb
+- [__bzip2.rb__](lib/puppet_x/bigbigfacts/drivers/bzip2.rb)
+This is a slightly more complex form of a driver. However it is still a ruby implementation of the method.
 
-- 7z.rb
+  - _Driver name_
+  > The driver name is 'BBPFDrivers::BZIP2'. The driver loads only methods which are related to bzip2: bz2::ffi, bz2::java, bz2::ruby, bz2::cmd, bz::auto, bzip2 & bz2. bz2 is like an orchestrator of all the other methods, it does no compression itself. It just directs the data to the other methods and redirects them and try again, when failures occurred. Yes this is also allowed under the framework.
+
+  - _Compressmethods/decompressmethods_
+  >The methods are loaded as a set of procs under the ruby method `compressmethods`, while their inverses in loaded under the ruby method `decompressmethods`.
+
+   - _Test_methods_
+  > Since these are symmetric methods, the default tests are used by leaving the test set empty.
+
+  - _Autoload_declare_
+  > All methods need some addition gems to work, so here we get ruby to load these extra gem or libraries. However we do not load the library directly, just in case the method is never used at all. So we set ruby to load it only if the Compressmethods/decompressmethods is ever called. Please note that the `bbpf_supportmatrix` does call every method once. If you want finer control of the library loading, it would be best if you exclude your new method from autotesting in `bbpf_supportmatrix` custom fact. This done by addin the name of the method into a array. You can see how is done with
+  ```ruby
+    # For excluding from bbpf_supportmatrix's autotest
+    bbpf_supportmatrix_noautotest = []
+    bbpf_supportmatrix_noautotest << 'bz2::ruby'
+    bbpf_supportmatrix_noautotest
+  ```
+
+  > As you may notice this is a way to include additional gems and libraries to the puppet agent run without updating or change the default puppet's gempath. The ways to update the gems are documented [here](README_update.md). This is a cleaner way to package gem/libraries into the puppet agent run. In the event that this module is removed from the node's environment, there will be no residual gems/libraries contamination to the puppet agent's ruby gempath from this module.
+
+
+- [__7z.rb__](lib/puppet_x/bigbigfacts/drivers/7z.rb)
+This is another form of a driver. It is not a ruby implementation of the method, but it makes use of command, by shellout.
+
+  - _Driver name_
+  > The driver name is 'BBBPFDrivers::Z7Z'. The driver loads only methods which are related to 7z and has dependency on the 7za's CLI. There are postfixed with "::shellout" or "::shellout2". Most of them are CLI-based methods, but there is one which relied on addition gem/library: 7z::. However that library is not package here, due to the some problem or issue with native ruby compiling. This does not affect the functionaly. Yes the 7z:: will fail. But it will fail gracefully in the framework. This is another features of the framework. Yes this is also allowed under the framework.
+
+  - _Compressmethods/decompressmethods_
+  >The methods are loaded as a set of procs under the ruby method `compressmethods`, while their inverses in loaded under the ruby method `decompressmethods`.
+
+   - _Test_methods_
+  > Since these are symmetric methods, the default tests are used by leaving the test set empty.
+
+  - _Autoload_declare_
+  > All methods need some addition gems to work, so here we get ruby to load these extra gem or libraries. However we do not load the library directly, just in case the method is never used at all. So we set ruby to load it only if the Compressmethods/decompressmethods is ever called. Please note that the `bbpf_supportmatrix` does call every method once. If you want finer control of the library loading, it would be best if you exclude your new method from autotesting in `bbpf_supportmatrix` custom fact. As mentioned before, there is no 7z library included in this module.
+
+  > As you may notice this is a way to include additional gems and libraries to the puppet agent run without updating or change the default puppet's gempath. The ways to update the gems are documented [here](README_update.md). This is a cleaner way to package gem/libraries into the puppet agent run. In the event that this module is removed from the node's environment, there will be no residual gems/libraries contamination to the puppet agent's ruby gempath from this module.
