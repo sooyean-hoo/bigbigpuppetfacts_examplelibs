@@ -139,11 +139,9 @@ class BBPFDrivers::BZIP2
     autoload :RBzip2, 'rbzip2'
     autoload :Bzip2, 'bzip2/ffi'
 
-
     # For excluding from bbpf_supportmatrix's autotest
     bbpf_supportmatrix_noautotest = []
     bbpf_supportmatrix_noautotest << 'bz2::ruby'
     bbpf_supportmatrix_noautotest
-
   end
 end
