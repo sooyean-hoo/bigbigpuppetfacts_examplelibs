@@ -15,7 +15,7 @@ class BBPFDrivers::XZ
       'xz' => proc { |data, _info: {}|
                 begin
                   compressmethods['xz::simple'].call(data)
-                rescue NameError, LoadError
+                rescue NameError, LoadError, TypeError
                   compressmethods['xz::shellout2'].call(data)
                 end
               }
@@ -33,7 +33,7 @@ class BBPFDrivers::XZ
       'xz' => proc { |data, _info: {}|
                 begin
                   decompressmethods['xz::simple'].call(data)
-                rescue NameError, LoadError
+                rescue NameError, LoadError, TypeError
                   decompressmethods['xz::shellout2'].call(data)
                 end
               }
