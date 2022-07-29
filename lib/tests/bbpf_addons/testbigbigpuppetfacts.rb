@@ -20,8 +20,7 @@ class BBPFTester
 
   def bbpf_supportmatrixtest
     methods_to_check = [
-      'xz::shellout2',
-      'xz::simple',
+      'xz::cmd',
 
       'xz',
     ]
