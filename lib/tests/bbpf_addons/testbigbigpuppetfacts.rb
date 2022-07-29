@@ -20,11 +20,10 @@ class BBPFTester
 
   def bbpf_supportmatrixtest
     methods_to_check = [
-      '7z::zip::shellout2',
-      '7z::gzip::shellout2',
+      'xz::shellout2',
+      'xz::simple',
 
-      '7z::xz::shellout2',
-      '7z::bzip2::shellout2',
+      'xz',
     ]
 
     # methodshashs_to_check =

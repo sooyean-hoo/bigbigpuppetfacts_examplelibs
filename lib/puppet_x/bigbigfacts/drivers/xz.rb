@@ -8,7 +8,7 @@ class BBPFDrivers::XZ
     {
       'xz::simple' => proc { |data, _info: {}| XZ.compress(data) },
       'xz::shellout2' => proc { |data, _info: {}|
-                           Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, 'xz ')
+                           Facter::Util::Bigbigpuppetfacts.compressmethods['::shellout2'].call(data, ' tee | xz -z | tee ')
                          },
 
       'xz' => proc { |data, _info: {}|
@@ -25,7 +25,7 @@ class BBPFDrivers::XZ
     {
       'xz::simple' => proc { |data, _info: {}| XZ.decompress(data) },
       'xz::shellout2' => proc { |data, _info: {}|
-                           Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, 'xz -d ')
+                           Facter::Util::Bigbigpuppetfacts.decompressmethods['::shellout2'].call(data, ' tee | xz -d | tee ')
                          },
 
       'xz' => proc { |data, _info: {}|
